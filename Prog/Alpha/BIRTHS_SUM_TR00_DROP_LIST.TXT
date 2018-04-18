@@ -1,0 +1,340 @@
+/** List of summary variables to drop from Births file because they have no data **/
+
+    Births_white_1998 Births_white_1999 Births_white_2000
+    Births_black_1998 Births_black_1999 Births_black_2000
+    Births_hisp_1998 Births_hisp_1999 Births_hisp_2000
+    Births_asian_1998 Births_asian_1999 Births_asian_2000
+    Births_oth_rac_1998 Births_oth_rac_1999 Births_oth_rac_2000
+    Births_w_race_1998 Births_w_race_1999 Births_w_race_2000
+    Births_teen_wht_1998 Births_teen_wht_1999
+    Births_teen_wht_2000 Births_teen_blk_1998
+    Births_teen_blk_1999 Births_teen_blk_2000
+    Births_teen_hsp_1998 Births_teen_hsp_1999
+    Births_teen_hsp_2000 Births_teen_asn_1998
+    Births_teen_asn_1999 Births_teen_asn_2000
+    Births_teen_oth_1998 Births_teen_oth_1999
+    Births_teen_oth_2000
+    Births_under18_wht_1998 Births_under18_wht_1999
+    Births_under18_wht_2000 Births_under18_blk_1998
+    Births_under18_blk_1999 Births_under18_blk_2000
+    Births_under18_hsp_1998 Births_under18_hsp_1999
+    Births_under18_hsp_2000 Births_under18_asn_2003
+    Births_under18_asn_1998 Births_under18_asn_1999
+    Births_under18_asn_2000 Births_under18_oth_2004
+    Births_under18_oth_1998 Births_under18_oth_1999
+    Births_under18_oth_2000
+    Births_0to14_wht_2003 Births_0to14_wht_2004
+    Births_0to14_wht_1998 Births_0to14_wht_1999
+    Births_0to14_wht_2002 Births_0to14_wht_2000
+    Births_0to14_wht_2001 Births_0to14_blk_1998
+    Births_0to14_blk_1999 Births_0to14_blk_2000
+    Births_0to14_hsp_1998 Births_0to14_hsp_1999
+    Births_0to14_hsp_2000 Births_0to14_asn_2003
+    Births_0to14_asn_1998 Births_0to14_asn_1999
+    Births_0to14_asn_2002 Births_0to14_asn_2000
+    Births_0to14_asn_2001 Births_0to14_oth_2003
+    Births_0to14_oth_2004 Births_0to14_oth_1998
+    Births_0to14_oth_1999 Births_0to14_oth_2002
+    Births_0to14_oth_2000 Births_0to14_oth_2001
+    Births_15to19_wht_1998 Births_15to19_wht_1999
+    Births_15to19_wht_2000 Births_15to19_blk_1998
+    Births_15to19_blk_1999 Births_15to19_blk_2000
+    Births_15to19_hsp_1998 Births_15to19_hsp_1999
+    Births_15to19_hsp_2000 Births_15to19_asn_1998
+    Births_15to19_asn_1999 Births_15to19_asn_2000
+    Births_15to19_oth_1998 Births_15to19_oth_1999
+    Births_15to19_oth_2000
+    Births_20to24_wht_1998 Births_20to24_wht_1999
+    Births_20to24_wht_2000 Births_20to24_blk_1998
+    Births_20to24_blk_1999 Births_20to24_blk_2000
+    Births_20to24_hsp_1998 Births_20to24_hsp_1999
+    Births_20to24_hsp_2000 Births_20to24_asn_1998
+    Births_20to24_asn_1999 Births_20to24_asn_2000
+    Births_20to24_oth_1998 Births_20to24_oth_1999
+    Births_20to24_oth_2000
+    Births_25to29_wht_1998 Births_25to29_wht_1999
+    Births_25to29_wht_2000 Births_25to29_blk_1998
+    Births_25to29_blk_1999 Births_25to29_blk_2000
+    Births_25to29_hsp_1998 Births_25to29_hsp_1999
+    Births_25to29_hsp_2000 Births_25to29_asn_1998
+    Births_25to29_asn_1999 Births_25to29_asn_2000
+    Births_25to29_oth_1998 Births_25to29_oth_1999
+    Births_25to29_oth_2000
+    Births_30to34_wht_1998 Births_30to34_wht_1999
+    Births_30to34_wht_2000 Births_30to34_blk_1998
+    Births_30to34_blk_1999 Births_30to34_blk_2000
+    Births_30to34_hsp_1998 Births_30to34_hsp_1999
+    Births_30to34_hsp_2000 Births_30to34_asn_1998
+    Births_30to34_asn_1999 Births_30to34_asn_2000
+    Births_30to34_oth_1998 Births_30to34_oth_1999
+    Births_30to34_oth_2000
+    Births_35to39_wht_1998 Births_35to39_wht_1999
+    Births_35to39_wht_2000 Births_35to39_blk_1998
+    Births_35to39_blk_1999 Births_35to39_blk_2000
+    Births_35to39_hsp_1998 Births_35to39_hsp_1999
+    Births_35to39_hsp_2000 Births_35to39_asn_1998
+    Births_35to39_asn_1999 Births_35to39_asn_2000
+    Births_35to39_oth_1998 Births_35to39_oth_1999
+    Births_35to39_oth_2000
+    Births_40to44_wht_1998 Births_40to44_wht_1999
+    Births_40to44_wht_2000 Births_40to44_blk_1998
+    Births_40to44_blk_1999 Births_40to44_blk_2000
+    Births_40to44_hsp_1998 Births_40to44_hsp_1999
+    Births_40to44_hsp_2000 Births_40to44_asn_1998
+    Births_40to44_asn_1999 Births_40to44_asn_2000
+    Births_40to44_oth_1998 Births_40to44_oth_1999
+    Births_40to44_oth_2000
+    Births_45plus_wht_1998 Births_45plus_wht_1999
+    Births_45plus_wht_2000 Births_45plus_blk_1998
+    Births_45plus_blk_1999 Births_45plus_blk_2000
+    Births_45plus_hsp_1998 Births_45plus_hsp_1999
+    Births_45plus_hsp_2000 Births_45plus_asn_1998
+    Births_45plus_asn_1999 Births_45plus_asn_2000
+    Births_45plus_oth_1998 Births_45plus_oth_1999
+    Births_45plus_oth_2000
+    Births_w_age_wht_1998 Births_w_age_wht_1999
+    Births_w_age_wht_2000 Births_w_age_blk_1998
+    Births_w_age_blk_1999 Births_w_age_blk_2000
+    Births_w_age_hsp_1998 Births_w_age_hsp_1999
+    Births_w_age_hsp_2000 Births_w_age_asn_1998
+    Births_w_age_asn_1999 Births_w_age_asn_2000
+    Births_w_age_oth_1998 Births_w_age_oth_1999
+    Births_w_age_oth_2000
+    Births_low_wt_wht_1998 Births_low_wt_wht_1999
+    Births_low_wt_wht_2000 Births_low_wt_blk_1998
+    Births_low_wt_blk_1999 Births_low_wt_blk_2000
+    Births_low_wt_hsp_1998 Births_low_wt_hsp_1999
+    Births_low_wt_hsp_2000 Births_low_wt_asn_1998
+    Births_low_wt_asn_1999 Births_low_wt_asn_2000
+    Births_low_wt_oth_1998 Births_low_wt_oth_1999
+    Births_low_wt_oth_2000
+    Births_w_weight_wht_1998 Births_w_weight_wht_1999
+    Births_w_weight_wht_2000 Births_w_weight_blk_1998
+    Births_w_weight_blk_1999 Births_w_weight_blk_2000
+    Births_w_weight_hsp_1998 Births_w_weight_hsp_1999
+    Births_w_weight_hsp_2000 Births_w_weight_asn_1998
+    Births_w_weight_asn_1999 Births_w_weight_asn_2000
+    Births_w_weight_oth_1998 Births_w_weight_oth_1999
+    Births_w_weight_oth_2000
+    Births_single_1998 Births_single_1999 Births_single_2000
+    Births_single_2001 Births_single_wht_1998
+    Births_single_wht_1999 Births_single_wht_2000
+    Births_single_wht_2001 Births_single_blk_1998
+    Births_single_blk_1999 Births_single_blk_2000
+    Births_single_blk_2001 Births_single_hsp_1998
+    Births_single_hsp_1999 Births_single_hsp_2000
+    Births_single_hsp_2001 Births_single_asn_1998
+    Births_single_asn_1999 Births_single_asn_2000
+    Births_single_asn_2001 Births_single_oth_1998
+    Births_single_oth_1999 Births_single_oth_2000
+    Births_single_oth_2001
+	Births_single_0to14_1998
+	Births_single_15to19_1998
+	Births_single_20to24_1998
+	Births_single_25to29_1998
+	Births_single_30to34_1998
+	Births_single_35to39_1998
+	Births_single_40to44_1998
+	Births_single_45plus_1998
+	Births_single_0to14_1999
+	Births_single_15to19_1999
+	Births_single_20to24_1999
+	Births_single_25to29_1999
+	Births_single_30to34_1999
+	Births_single_35to39_1999
+	Births_single_40to44_1999
+	Births_single_45plus_1999
+	Births_single_0to14_2000
+	Births_single_15to19_2000
+	Births_single_20to24_2000
+	Births_single_25to29_2000
+	Births_single_30to34_2000
+	Births_single_35to39_2000
+	Births_single_40to44_2000
+	Births_single_45plus_2000
+	Births_single_0to14_2001
+	Births_single_15to19_2001
+	Births_single_20to24_2001
+	Births_single_25to29_2001
+	Births_single_30to34_2001
+	Births_single_35to39_2001
+	Births_single_40to44_2001
+	Births_single_45plus_2001
+    Births_w_mstat_1998 Births_w_mstat_1999 Births_w_mstat_2000
+    Births_w_mstat_2001 Births_w_mstat_wht_1998
+    Births_w_mstat_wht_1999 Births_w_mstat_wht_2000
+    Births_w_mstat_wht_2001 Births_w_mstat_blk_1998
+    Births_w_mstat_blk_1999 Births_w_mstat_blk_2000
+    Births_w_mstat_blk_2001 Births_w_mstat_hsp_1998
+    Births_w_mstat_hsp_1999 Births_w_mstat_hsp_2000
+    Births_w_mstat_hsp_2001 Births_w_mstat_asn_1998
+    Births_w_mstat_asn_1999 Births_w_mstat_asn_2000
+    Births_w_mstat_asn_2001 Births_w_mstat_oth_1998
+    Births_w_mstat_oth_1999 Births_w_mstat_oth_2000
+    Births_w_mstat_oth_2001
+	Births_w_mstat_0to14_1998
+	Births_w_mstat_15to19_1998
+	Births_w_mstat_20to24_1998
+	Births_w_mstat_25to29_1998
+	Births_w_mstat_30to34_1998
+	Births_w_mstat_35to39_1998
+	Births_w_mstat_40to44_1998
+	Births_w_mstat_45plus_1998
+	Births_w_mstat_0to14_1999
+	Births_w_mstat_15to19_1999
+	Births_w_mstat_20to24_1999
+	Births_w_mstat_25to29_1999
+	Births_w_mstat_30to34_1999
+	Births_w_mstat_35to39_1999
+	Births_w_mstat_40to44_1999
+	Births_w_mstat_45plus_1999
+	Births_w_mstat_0to14_2000
+	Births_w_mstat_15to19_2000
+	Births_w_mstat_20to24_2000
+	Births_w_mstat_25to29_2000
+	Births_w_mstat_30to34_2000
+	Births_w_mstat_35to39_2000
+	Births_w_mstat_40to44_2000
+	Births_w_mstat_45plus_2000
+	Births_w_mstat_0to14_2001
+	Births_w_mstat_15to19_2001
+	Births_w_mstat_20to24_2001
+	Births_w_mstat_25to29_2001
+	Births_w_mstat_30to34_2001
+	Births_w_mstat_35to39_2001
+	Births_w_mstat_40to44_2001
+	Births_w_mstat_45plus_2001
+    Births_prenat_1st_1998 Births_prenat_adeq_1998
+    Births_prenat_intr_1998 Births_prenat_inad_1998
+    Births_prenat_1st_wht_1998 Births_prenat_1st_wht_1999
+    Births_prenat_1st_wht_2000 Births_prenat_1st_blk_1998
+    Births_prenat_1st_blk_1999 Births_prenat_1st_blk_2000
+    Births_prenat_1st_hsp_1998 Births_prenat_1st_hsp_1999
+    Births_prenat_1st_hsp_2000 Births_prenat_1st_asn_1998
+    Births_prenat_1st_asn_1999 Births_prenat_1st_asn_2000
+    Births_prenat_1st_oth_1998 Births_prenat_1st_oth_1999
+    Births_prenat_1st_oth_2000 Births_prenat_adeq_wht_1998
+	Births_prenat_1st_0to14_1998
+	Births_prenat_1st_15to19_1998
+	Births_prenat_1st_20to24_1998	
+	Births_prenat_1st_25to29_1998
+	Births_prenat_1st_30to34_1998
+	Births_prenat_1st_35to39_1998
+	Births_prenat_1st_40to44_1998
+	Births_prenat_1st_45plus_1998
+    Births_prenat_adeq_wht_1999 Births_prenat_adeq_wht_2000
+    Births_prenat_adeq_blk_1998 Births_prenat_adeq_blk_1999
+    Births_prenat_adeq_blk_2000 Births_prenat_adeq_hsp_1998
+    Births_prenat_adeq_hsp_1999 Births_prenat_adeq_hsp_2000
+    Births_prenat_adeq_asn_1998 Births_prenat_adeq_asn_1999
+    Births_prenat_adeq_asn_2000 Births_prenat_adeq_oth_1998
+    Births_prenat_adeq_oth_1999 Births_prenat_adeq_oth_2000
+	Births_prenat_adeq_0to14_1998
+	Births_prenat_adeq_15to19_1998
+	Births_prenat_adeq_20to24_1998	
+	Births_prenat_adeq_25to29_1998
+	Births_prenat_adeq_30to34_1998
+	Births_prenat_adeq_35to39_1998
+	Births_prenat_adeq_40to44_1998
+	Births_prenat_adeq_45plus_1998
+    Births_prenat_intr_wht_1998 Births_prenat_intr_wht_1999
+    Births_prenat_intr_wht_2000 Births_prenat_intr_blk_1998
+    Births_prenat_intr_blk_1999 Births_prenat_intr_blk_2000
+    Births_prenat_intr_hsp_1998 Births_prenat_intr_hsp_1999
+    Births_prenat_intr_hsp_2000 Births_prenat_intr_asn_1998
+    Births_prenat_intr_asn_1999 Births_prenat_intr_asn_2000
+    Births_prenat_intr_oth_1998 Births_prenat_intr_oth_1999
+    Births_prenat_intr_oth_2000 
+	Births_prenat_intr_0to14_1998
+	Births_prenat_intr_15to19_1998
+	Births_prenat_intr_20to24_1998	
+	Births_prenat_intr_25to29_1998
+	Births_prenat_intr_30to34_1998
+	Births_prenat_intr_35to39_1998
+	Births_prenat_intr_40to44_1998
+	Births_prenat_intr_45plus_1998
+    Births_prenat_inad_wht_1998
+    Births_prenat_inad_wht_1999 Births_prenat_inad_wht_2000
+    Births_prenat_inad_blk_1998 Births_prenat_inad_blk_1999
+    Births_prenat_inad_blk_2000 Births_prenat_inad_hsp_1998
+    Births_prenat_inad_hsp_1999 Births_prenat_inad_hsp_2000
+    Births_prenat_inad_asn_1998 Births_prenat_inad_asn_1999
+    Births_prenat_inad_asn_2000 Births_prenat_inad_oth_2003
+    Births_prenat_inad_oth_1998 Births_prenat_inad_oth_1999
+    Births_prenat_inad_oth_2000
+	Births_prenat_inad_0to14_1998
+	Births_prenat_inad_15to19_1998
+	Births_prenat_inad_20to24_1998	
+	Births_prenat_inad_25to29_1998
+	Births_prenat_inad_30to34_1998
+	Births_prenat_inad_35to39_1998
+	Births_prenat_inad_40to44_1998
+	Births_prenat_inad_45plus_1998
+    Births_w_prenat_1998 Births_w_prenat_wht_1998
+    Births_w_prenat_wht_1999 Births_w_prenat_wht_2000
+    Births_w_prenat_blk_1998 Births_w_prenat_blk_1999
+    Births_w_prenat_blk_2000 Births_w_prenat_hsp_1998
+    Births_w_prenat_hsp_1999 Births_w_prenat_hsp_2000
+    Births_w_prenat_asn_1998 Births_w_prenat_asn_1999
+    Births_w_prenat_asn_2000 Births_w_prenat_oth_1998
+    Births_w_prenat_oth_1999 Births_w_prenat_oth_2000
+	Births_w_prenat_0to14_1998
+	Births_w_prenat_15to19_1998
+	Births_w_prenat_20to24_1998
+	Births_w_prenat_25to29_1998
+	Births_w_prenat_30to34_1998	
+	Births_w_prenat_35to39_1998
+	Births_w_prenat_40to44_1998
+	Births_w_prenat_45plus_1998
+Births_preterm_1998
+Births_preterm_0to14_1998
+Births_preterm_15to19_1998
+Births_preterm_20to24_1998
+Births_preterm_25to29_1998
+Births_preterm_30to34_1998
+Births_preterm_35to39_1998
+Births_preterm_40to44_1998
+Births_preterm_45plus_1998
+Births_preterm_asn_1998
+Births_preterm_blk_1998
+Births_preterm_hsp_1998
+Births_preterm_oth_1998
+Births_preterm_wht_1998
+Births_preterm_asn_1999
+Births_preterm_blk_1999
+Births_preterm_hsp_1999
+Births_preterm_oth_1999
+Births_preterm_wht_1999
+Births_preterm_asn_2000
+Births_preterm_blk_2000
+Births_preterm_hsp_2000
+Births_preterm_oth_2000
+Births_preterm_wht_2000
+	Births_w_gest_age_1998
+	Births_w_gest_age_0to14_1998
+	Births_w_gest_age_15to19_1998
+	Births_w_gest_age_20to24_1998
+	Births_w_gest_age_25to29_1998
+	Births_w_gest_age_30to34_1998
+	Births_w_gest_age_35to39_1998
+	Births_w_gest_age_40to44_1998
+	Births_w_gest_age_45plus_1998
+	Births_w_gest_age_asn_1998
+	Births_w_gest_age_blk_1998
+	Births_w_gest_age_hsp_1998
+	Births_w_gest_age_oth_1998
+	Births_w_gest_age_wht_1998
+	Births_w_gest_age_asn_1999
+	Births_w_gest_age_blk_1999
+	Births_w_gest_age_hsp_1999
+	Births_w_gest_age_oth_1999
+	Births_w_gest_age_wht_1999
+	Births_w_gest_age_asn_2000
+	Births_w_gest_age_blk_2000
+	Births_w_gest_age_hsp_2000
+	Births_w_gest_age_oth_2000
+	Births_w_gest_age_wht_2000
+    Births_w_agerace_1998
+    Births_w_agerace_1999
+    Births_w_agerace_2000
+    Births_w_agerace_2001
