@@ -21,8 +21,8 @@ libname raw "L:\Libraries\Vital\Raw\2018";
 /** Use MAR geocoder to geocode address data **/
 
 %DC_mar_geocode(
-  debug=y,
-  streetalt_file = D:\DCData\Libraries\MAR\Prog\StreetAlt_041918_new.txt,
+  debug=n,
+  streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = raw.B9final,
   staddr = address,
   zip = zipcode,
@@ -38,8 +38,8 @@ run;
 
 /** Use MAR geocoder to geocode address data **/
 %DC_mar_geocode(
-  debug=y,
-  streetalt_file = D:\DCData\Libraries\MAR\Prog\StreetAlt_041918_new.txt,
+  debug=n,
+  streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = raw.B0308final,
   staddr = address,
   out = b0308geo
@@ -53,8 +53,8 @@ run;
 
 /** Use MAR geocoder to geocode address data **/
 %DC_mar_geocode(
-  debug=y,
-  streetalt_file = D:\DCData\Libraries\MAR\Prog\StreetAlt_041918_new.txt,
+  debug=n,
+  streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = raw.b1016final,
   staddr = address,
   out = b1016geo
