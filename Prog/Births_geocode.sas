@@ -84,7 +84,7 @@ proc mapimport out=Oldboudnary_map
   datafile="D:\DCData\Libraries\Vital\Maps\OLD\School_Attendance_Zones_Elementary__Old.shp";  
 run;
 
-proc sort data=Oldboudnary_map; by GIS_ID;
+proc sort data=Oldboudnary_map; by OBJECTID_1;
 run;
 
 goptions reset=global border;
@@ -93,14 +93,72 @@ proc ginside includeborder
   data=b9geo
   map=Oldboudnary_map
   out=Oldboudnary_map_join;
-  id GIS_ID;
+  id OBJECTID_1;
 run;
 
 proc freq data = Oldboudnary_map_join;
-	tables gis_id;
+	tables OBJECTID_1;
 run;
 
 
+goptions reset=global border;
+
+proc ginside includeborder
+  data=b0308geo
+  map=Oldboudnary_map
+  out=Oldboudnary_map_join;
+  id OBJECTID_1;
+run;
+
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2003'));
+	tables OBJECTID_1 ;
+run;
+
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2004'));
+	tables OBJECTID_1 ;
+run;
+
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2005'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2006'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2007'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2008'));
+	tables OBJECTID_1 ;
+run;
+goptions reset=global border;
+
+proc ginside includeborder
+  data=b1016geo
+  map=Oldboudnary_map
+  out=Oldboudnary_map_join;
+  id OBJECTID_1;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2010'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2011'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2012'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2013'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2014'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2015'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2016'));
+	tables OBJECTID_1 ;
+run;
 /*export the geocoded file to excel for Arcgis
 
 proc export data=b9geo (where=(_STATUS_=''))
