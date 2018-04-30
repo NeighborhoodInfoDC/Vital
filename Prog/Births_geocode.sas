@@ -79,11 +79,22 @@ run;
 
 
 /* Import ArcMap shapefile with parcel polygons */
-/*can't find physical path?
-proc mapimport out=Occ.Newboundary_map
-  datafile="D:\DCData\Libraries\Vital\Maps\CURRENT\School_Attendance_Zones_Elementary";
+
+proc mapimport out=Oldboudnary_map
+  datafile="D:\DCData\Libraries\Vital\Maps\OLD\School_Attendance_Zones_Elementary__Old.shp";  
 run;
-*/
+proc sort out=Oldboudnary_map; by OBJECTID_1;
+run;
+
+goptions reset=global border;
+
+proc ginside includeborder
+  data=b9geo
+  map=Oldboudnary_map
+  out=Oldboudnary_map_join;
+  id objectid;
+run;
+
 
 /*export the geocoded file to excel for Arcgis
 
