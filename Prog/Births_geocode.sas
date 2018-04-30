@@ -82,22 +82,22 @@ run;
 
 proc mapimport out=Oldboudnary_map
   datafile="D:\DCData\Libraries\Vital\Maps\OLD\School_Attendance_Zones_Elementary__Old.shp";  
-  select GIS_ID;
 run;
 
-data old_map; set Oldboudnary_map; id=_n_;
-run;
-
-proc sort out=Oldboudnary_map; by GIS_ID id;
+proc sort data=Oldboudnary_map; by GIS_ID;
 run;
 
 goptions reset=global border;
 
 proc ginside includeborder
   data=b9geo
-  map=old_map
+  map=Oldboudnary_map
   out=Oldboudnary_map_join;
   id GIS_ID;
+run;
+
+proc freq data = Oldboudnary_map_join;
+	tables gis_id;
 run;
 
 
