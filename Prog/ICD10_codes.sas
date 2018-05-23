@@ -14,14 +14,14 @@
  Modifications:
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
+%include "L:\SAS\Inc\StdLocal.sas";
 
 ** Define libraries **;
 %DCData_lib( Vital )
 
 *options obs=20;
 
-filename inf  "&_dcdata_path\Vital\Doc\International Classification of Diseases, Revision 10 (1990), 4-digit.txt" 
+filename inf  "&_dcdata_r_path\Vital\Doc\International Classification of Diseases, Revision 10 (1990), 4-digit.txt" 
   lrecl=2000;
   
 data Vital.ICD10_codes (label='International Classification of Diseases, revision 10, 3 & 4-digit codes');
@@ -118,29 +118,6 @@ run;
   Print=N,
   Contents=N
   )
-
-proc catalog catalog=Vital.formats;
-  delete icd103s / entrytype=formatc;
-  delete icd104s / entrytype=formatc;
-quit;
-
-/*
-%Data_to_format(
-  FmtLib=Vital,
-  FmtName=$icd103s,
-  Desc=%str(ICD10 3-digit, summary categories),
-  Data=Vital.Icd10_codes (where=(Code_type=3)),
-  Value=Icd10,
-  Label=Category,
-  OtherLabel='Unrecognized code',
-  NotSorted=Y,
-  DefaultLen=.,
-  MaxLen=.,
-  MinLen=.,
-  Print=N,
-  Contents=N
-  )
-*/
 
 ** Verification formats **;
 

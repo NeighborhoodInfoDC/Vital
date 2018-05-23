@@ -14,15 +14,14 @@
  Modifications:
 **************************************************************************/
 
-%include "K:\Metro\PTatian\DCData\SAS\Inc\Stdhead.sas";
-***%include "C:\DCData\SAS\Inc\Stdhead.sas";
+%include "L:\SAS\Inc\StdLocal.sas";
 
 ** Define libraries **;
 %DCData_lib( Vital )
 
 *options obs = 50;
 
-filename inf  "&_dcdata_path\Vital\Doc\ICD-9 codes.txt" 
+filename inf  "&_dcdata_r_path\Vital\Doc\ICD-9 codes.txt" 
   lrecl=2000;
   
 data Vital.Icd9_codes (label='International Classification of Diseases, revision 9, 3 & 4-digit codes');
