@@ -119,29 +119,6 @@ run;
   Contents=N
   )
 
-proc catalog catalog=Vital.formats;
-  delete icd103s / entrytype=formatc;
-  delete icd104s / entrytype=formatc;
-quit;
-
-/*
-%Data_to_format(
-  FmtLib=Vital,
-  FmtName=$icd103s,
-  Desc=%str(ICD10 3-digit, summary categories),
-  Data=Vital.Icd10_codes (where=(Code_type=3)),
-  Value=Icd10,
-  Label=Category,
-  OtherLabel='Unrecognized code',
-  NotSorted=Y,
-  DefaultLen=.,
-  MaxLen=.,
-  MinLen=.,
-  Print=N,
-  Contents=N
-  )
-*/
-
 ** Verification formats **;
 
 %Data_to_format(
