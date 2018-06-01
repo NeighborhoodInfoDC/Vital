@@ -27,23 +27,17 @@ libname vitalraw "&_dcdata_r_path\Vital\Raw\2018";
 data births;
 	set vitalraw.B1016final;
 
-	** UI created  record number **;
-	RecordNo + 1;
-    label RecordNo = "Record number (UI created)";
-
 	** Convert some character variables to numeric **;
 	mage_n = 1 * mage;
 	bweight_n = 1 * bweight;
 	gest_age_n = 1 * gest_age;
 	num_visit_n = 1 * num_visit;
-	*pre_care_n = 1 * pre_care;
 
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;
 	if bweight_n = 9999 then bweight_n = .u;
 	if gest_age_n = 99 then gest_age_n = .u;
 	if num_visit_n = 99 then num_visit_n = .u;
-	*if pre_care_n = 99 then pre_care_n = .u;
 
 	 ** Check birth dates **;
   
@@ -51,7 +45,21 @@ data births;
 		%warn_put( msg="Birth date in wrong year: " _n_= date= birthyr= birthmo= birthdy= )
 	end;
 
-	  ** Fill in missing vars for 2010 - 2016 data **;
+	** Record race and ethnicity **;
+	if mrace = "White" then mrace_num = 1;
+		else if mrace = "Black" then mrace_num = 2;
+		else if mrace = "Asian & Specific Isl" then mrace_num=4;
+		else mrace_num = 0;
+
+	if latino_new = "Non-Hispanic" then latino = "N";
+		else if latino_new = "Missing" then latino ="N";
+		else if latino_new = "Hispanic" then latino = "Y";
+
+	** Recode marital status **;
+	if mstatnew = "Married" then mstat = 1;
+		else if mstatnew = "Unmarried" then mstat = 2;
+
+	** Fill in missing vars for 2010 - 2016 data **;
   
 	concept_dt = intnx( 'week', date, -1 * gest_age_n, 'same' );
   
@@ -88,8 +96,8 @@ run;
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data births_geo_nomatch;
 	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 
-				Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
-				_STATUS_ _NOTES_ _SCORE_);
+						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
+						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
 	if fedtractno in ("000000","999999"," ") then delete;
@@ -115,15 +123,7 @@ data births_geo_all;
     label Births_total = "Total births";
 
 	** Births by race / ethnicity **;
-	if mrace = "White" then mrace_num = 1;
-		else if mrace = "Black" then mrace_num = 2;
-		else if mrace = "Asian & Specific Isl" then mrace_num=4;
-		else mrace_num = 0;
 
-	if latino_new = "Non-Hispanic" then latino = "N";
-		else if latino_new = "Missing" then latino ="N";
-		else if latino_new = "Hispanic" then latino = "Y";
-	
 	if not( missing( latino ) ) and not( missing( mrace_num ) ) then do;
     
       Births_white = 0;
@@ -262,9 +262,6 @@ data births_geo_all;
     %By_age( Births_w_weight, with birth weight reported, Births );
 
 	  ** Single mother births **;
-
-	if mstatnew = "Married" then mstat = 1;
-		else if mstatnew = "Unmarried" then mstat = 2;
     
       if Mstat in ( 1, 2 ) then do;
         if Mstat in ( 2 ) then Births_single = 1;
@@ -307,7 +304,7 @@ data births_geo_all;
 
    ** Preterm births **;
 
-	gess_age = gest_age_n;
+	gest_age = gest_age_n;
       
       if gest_age > 0 then do;
       
@@ -347,6 +344,12 @@ run;
 
 data births_&year.;
 	set Births_geo_all;
+
+	** UI created  record number **;
+	RecordNo + 1;
+    label RecordNo = "Record number (UI created)";
+
+	** Keep only single year **;
 	if birthyr = &year.;
 run;
 
