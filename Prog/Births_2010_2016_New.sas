@@ -373,7 +373,7 @@ run;
   revisions=%str(&revisions.),
   /** File info parameters **/
   printobs=5,
-  freqvars=year ward2012 mrace mstatnew meducatn
+  freqvars=birthyr ward2012 mrace mstatnew meducatn
   );
 
 
