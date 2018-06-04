@@ -107,6 +107,15 @@ data births_geo_nomatch;
 run;
 
 
+** Print ungeocodable records**;
+data births_ungeocodable;
+	set births_geo (keep = address fedtractno);
+	if fedtractno in ("000000","999999"," ");
+run;
+
+proc print data = births_ungeocodable; run;
+
+
 ** Subset records that matched **;
 data births_geo_match;
 	set births_geo;
