@@ -83,9 +83,12 @@ data births;
 	address=tranwrd(address, "SEWASHINGTON", "SE");
 	address=tranwrd(address, "WASHINGTON DC", " ");
 	address=tranwrd(address, "WASH DC", " ");
+
+	length fedtractno_ $ 3;
+	fedtractno_ = fedtractno;
     
   
-  	format date mmddyy10.;
+  	format date mmddyy10. fedtractno_ $3.;
 
 run;
 
@@ -103,22 +106,28 @@ run;
 
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data births_geo_nomatch;
-	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 
+	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 Geo2010 GeoBg2010 GeoBlk2010 
 						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
 						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
 	** Create Geo2010 from fedtractno **;
-	if fedtractno in ("000000","999999"," ") then delete;
-	geo2010 = "11"||"000"||fedtractno;
+	if fedtractno in ("000","999"," ") then delete;
+	geo2010 = "11"||"001"||"00"||fedtractno_||"0";
+	
 
 run;
+
+%tr10_to_stdgeos( 
+  in_ds=births_geo_nomatch, 
+  out_ds=births_geo_std
+);
 
 
 ** Subset ungeocodable records**;
 data births_ungeocodable;
 	set births_geo (keep = address fedtractno m_addr);
-	if fedtractno in ("000000","999999"," ") and m_addr = " " ;
+	if fedtractno in ("000","999"," ") and m_addr = " " ;
 run;
 
 
@@ -131,7 +140,7 @@ run;
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match births_geo_nomatch;
+	set births_geo_match births_geo_std;
 
 	%Read_births_new ();
 

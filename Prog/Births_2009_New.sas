@@ -91,16 +91,22 @@ run;
 
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data births_geo_nomatch;
-	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 
+	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 Geo2010 GeoBg2010 GeoBlk2010 
 						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
 						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
 	** Create Geo2010 from fedtractno **;
 	if fedtractno in ("000000","999999"," ") then delete;
-	geo2010 = "11"||"000"||fedtractno;
+	geo2010 = "11"||"001"||fedtractno;
+	format geo2010 $11.;
 
 run;
+
+%tr10_to_stdgeos( 
+  in_ds=births_geo_nomatch, 
+  out_ds=births_geo_std
+);
 
 
 ** Subset ungeocodable records**;
@@ -120,7 +126,7 @@ run;
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match births_geo_nomatch;
+	set births_geo_match births_geo_std;
 
 	%Read_births_new ();
 
