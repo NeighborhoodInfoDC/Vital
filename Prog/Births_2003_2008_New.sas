@@ -32,7 +32,7 @@ data births;
 	bweight_n = 1 * bweight;
 	gest_age_n = 1 * gest_age;
 	num_visit_n = 1 * num_visit;
-	pre_care_n = pre_care;
+	pre_care_n = 1 * pre_care;
 
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;
@@ -85,7 +85,7 @@ data births;
 	address=tranwrd(address, "WASH DC", " ");
     
   
-  	format date concept_dt mmddyy10.;
+  	format date mmddyy10.;
 
 run;
 
@@ -93,6 +93,7 @@ run;
 ** Geocode the records **;
 %DC_mar_geocode(
   debug=n,
+  listunmatched=N,
   streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = births,
   staddr = address,
@@ -107,20 +108,18 @@ data births_geo_nomatch;
 						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
+	** Create Geo2010 from fedtractno **;
 	if fedtractno in ("000000","999999"," ") then delete;
-
 	geo2010 = "11"||"000"||fedtractno;
 
 run;
 
 
-** Print ungeocodable records**;
+** Subset ungeocodable records**;
 data births_ungeocodable;
-	set births_geo (keep = address fedtractno);
-	if fedtractno in ("000000","999999"," ");
+	set births_geo (keep = address fedtractno m_addr);
+	if fedtractno in ("000000","999999"," ") and m_addr = " " ;
 run;
-
-proc print data = births_ungeocodable; run;
 
 
 ** Subset records that matched **;

@@ -60,12 +60,6 @@ data births;
 		else if mstatnew = "Unmarried" then mstat = 2;
 		else mstat = .u;
 
-	** Fill in missing vars for 2010 - 2016 data **;
-  
-	concept_dt = intnx( 'week', date, -1 * gest_age_n, 'same' );
-  
-    pre_care_n = intck( 'week', concept_dt, dofp_date ) + 1;
-
 	  if 0 < mage_n < 20 then kMage = 1;
   		else if 20 <= mage_n then kMage = 0;
   
@@ -87,6 +81,7 @@ run;
 ** Geocode the records **;
 %DC_mar_geocode(
   debug=n,
+  listunmatched=N,
   streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = births,
   staddr = address,
@@ -101,20 +96,19 @@ data births_geo_nomatch;
 						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
+	** Create Geo2010 from fedtractno **;
 	if fedtractno in ("000000","999999"," ") then delete;
-
 	geo2010 = "11"||"000"||fedtractno;
 
 run;
 
 
-** Print ungeocodable records**;
+** Subset ungeocodable records**;
 data births_ungeocodable;
-	set births_geo (keep = address fedtractno);
-	if fedtractno in ("000000","999999"," ");
+	set births_geo (keep = address fedtractno m_addr);
+	if fedtractno in ("000000","999999"," ") and m_addr = " " ;
 run;
 
-proc print data = births_ungeocodable; run;
 
 
 ** Subset records that matched **;

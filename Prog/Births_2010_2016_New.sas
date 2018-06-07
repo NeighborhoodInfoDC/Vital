@@ -86,6 +86,7 @@ run;
 ** Geocode the records **;
 %DC_mar_geocode(
   debug=n,
+  listunmatched=N,
   streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = births,
   staddr = address,
@@ -95,25 +96,29 @@ run;
 
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data births_geo_nomatch;
-	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 
+	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 Geo2010 GeoBg2010 GeoBlk2010 
 						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
 						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
+	** Create Geo2010 from fedtractno **;
 	if fedtractno in ("000000","999999"," ") then delete;
-
-	geo2010 = "11"||"000"||fedtractno;
+	geo2010 = "11"||"001"||fedtractno;
+	format geo2010 $11.;
 
 run;
 
+%tr10_to_stdgeos( 
+  in_ds=births_geo_nomatch, 
+  out_ds=births_geo_std
+);
 
-** Print ungeocodable records**;
+
+** Subset ungeocodable records**;
 data births_ungeocodable;
-	set births_geo (keep = address fedtractno);
-	if fedtractno in ("000000","999999"," ");
+	set births_geo (keep = address fedtractno m_addr);
+	if fedtractno in ("000000","999999"," ") and m_addr = " " ;
 run;
-
-proc print data = births_ungeocodable; run;
 
 
 ** Subset records that matched **;
