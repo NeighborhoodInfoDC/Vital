@@ -112,8 +112,11 @@ data births_geo_nomatch;
 	if M_ADDR = " " ;
 
 	** Create Geo2010 from fedtractno **;
-	if fedtractno in ("000","999"," ") then delete;
-	geo2010 = "11"||"001"||"00"||fedtractno_||"0";
+	*if fedtractno in ("000","999"," ") then delete;
+	*geo2010 = "11"||"001"||"00"||fedtractno_||"0"; 
+
+	tract = fedtractno;
+	%Convert_dc_tracts( births, 2008 );
 	
 
 run;
