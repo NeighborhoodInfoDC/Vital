@@ -73,7 +73,7 @@ data births;
       Bweight_lbs = .u;
     
   
-  	format date concept_dt mmddyy10.;
+  	format date mmddyy10.;
 
 run;
 
