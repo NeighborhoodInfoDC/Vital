@@ -143,6 +143,7 @@
     end;
 
     &alloc = _alloc{_wt_srtd{_hd_alloc_index}};
+    &alloc._alloc = 1;
 
     output;
 
