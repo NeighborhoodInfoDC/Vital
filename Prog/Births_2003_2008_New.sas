@@ -86,12 +86,42 @@ data births;
 
 	length fedtractno_ $ 3;
 	fedtractno_ = fedtractno;
+	
+	if ward not in ( '1', '2', '3', '4', '5', '6', '7', '8' ) then ward = '';
     
   
   	format date mmddyy10. fedtractno_ $3.;
 
 run;
 
+proc format;
+  value $blank
+    ' ' = 'Blank'
+    other = 'Not blank';
+run;
+
+title2 '**** Missing geo data in source files ****';
+
+proc tabulate data=births format=comma12.0 noseps missing;
+  class birthyr address ward;
+  table 
+    /** Rows **/
+    birthyr='Year',
+    /** Columns **/
+    n='Total records' * all=' '
+    ( n='Addresses' rowpctn='%' * f=comma12.1 ) * address=' '
+  ;
+  table 
+    /** Rows **/
+    birthyr='Year',
+    /** Columns **/
+    n='Total records' * all=' '
+    ( n='Wards (source data)' rowpctn='%' * f=comma12.1 ) * ward=' '
+  ;
+  format address ward $blank.;
+run;
+
+title2;
 
 ** Geocode the records **;
 %DC_mar_geocode(
@@ -100,14 +130,16 @@ run;
   streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
   data = births,
   staddr = address,
-  out = births_geo
+  out = births_geo,
+  stnamenotfound_export = &_dcdata_default_path\Vital\Prog\Births_2003_2008_new_stnamenotfound.csv
 );
 
 
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data births_geo_nomatch;
 	set births_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 Geo2010 GeoBg2010 GeoBlk2010 
-						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
+						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 bridgepk stantoncommons cluster2017 
+						 M_CITY M_STATE M_ZIP M_OBS
 						 _STATUS_ _NOTES_ _SCORE_);
 	if M_ADDR = " " ;
 
@@ -118,36 +150,114 @@ data births_geo_nomatch;
 	tract = fedtractno;
 	%Convert_dc_tracts( births, 2008 );
 	
+	length Geo2010 $ 11;
+	
+	if tract_yr = 2010 then Geo2010 = tract_full;
 
 run;
 
-%tr10_to_stdgeos( 
-  in_ds=births_geo_nomatch, 
-  out_ds=births_geo_std
-);
+data births_geo_2008_ward_notract births_geo_other;
+
+  set births_geo_nomatch;
+  
+  if missing( geo2010 ) and not( missing( ward ) ) and birthyr = '2008' 
+    then output births_geo_2008_ward_notract;
+  else output births_geo_other;
+  
+run;
 
 
+/****
 ** Subset ungeocodable records**;
 data births_ungeocodable;
 	set births_geo (keep = address fedtractno m_addr);
 	if fedtractno in ("000","999"," ") and m_addr = " " ;
 run;
+*****/
 
 
 ** Subset records that matched **;
 data births_geo_match;
 	set births_geo;
 	if M_ADDR ^= " " ;
+  retain hotdeck_wt 1;
+  
 run;
+
+
+%Hot_deck2( 
+  by=Ward,
+  data=births_geo_2008_ward_notract, 
+  source=births_geo_match (where=(birthyr='2008')), 
+  alloc=geo2010, 
+  weight=hotdeck_wt, 
+  out=births_geo_2008_ward_notract_hd,
+  print=n
+)  
+
+data births_geo_nomatch_hotdeck;
+
+  set 
+    births_geo_other
+    births_geo_2008_ward_notract_hd;
+  
+  label geo2010_alloc = 'Census tract (GEO2010) was allocated';
+  
+  format geo2010_alloc dyesno.;
+      
+run;
+
+
+%tr10_to_stdgeos( 
+  in_ds=births_geo_nomatch_hotdeck, 
+  out_ds=births_geo_std
+);
 
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match births_geo_std;
+	set births_geo_match (drop=hotdeck_wt) births_geo_std;
+	
+	if missing( geo2010_alloc ) then geo2010_alloc = 0;
 
 	%Read_births_new ();
 
 run;
+
+title2 '**** Check HOTDECK allocation results ****';
+
+proc tabulate data=births_geo_all format=comma12.0 noseps missing;
+  where birthyr = '2008' and not( missing( ward2012 ) );
+  class birthyr ward2012 geo2010 geo2010_alloc;
+  table 
+    /** Pages **/
+    birthyr=' ' * ward2012=' ',
+    /** Rows **/
+    all='Total records' * n=' '
+    Geo2010='% by tract' * colpctn=' ' * f=comma12.1,
+    /** Columns **/
+    Geo2010_alloc='Allocated?'
+    / condense;
+run;
+
+title2; 
+
+
+title2 '**** Records with ward filled in after geocoding and allocations ****';
+
+proc tabulate data=births_geo_all format=comma12.0 noseps missing;
+  class birthyr ward2012;
+  table 
+    /** Rows **/
+    birthyr='Year',
+    /** Columns **/
+    n='Total' * all=' '
+    ( n='Wards (2012)' rowpctn='%' * f=comma12.1 ) * ward2012=' '
+  ;
+  format ward2012 $blank.;
+run;
+
+title2;
 
 
 %macro finalize_by_year;
@@ -157,12 +267,13 @@ run;
 data births_&year.;
 	set Births_geo_all;
 
+	** Keep only single year **;
+	where birthyr = "&year.";
+	
 	** UI created  record number **;
 	RecordNo + 1;
     label RecordNo = "Record number (UI created)";
 
-	** Keep only single year **;
-	if birthyr = &year.;
 run;
 
 %Finalize_data_set( 
@@ -175,7 +286,7 @@ run;
   restrictions=None,
   revisions=%str(&revisions.),
   /** File info parameters **/
-  printobs=5,
+  printobs=0,
   freqvars=birthyr ward2012 mrace mstatnew meducatn
   );
 
@@ -183,4 +294,5 @@ run;
 %end;
 
 %mend finalize_by_year;
+
 %finalize_by_year;
