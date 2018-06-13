@@ -34,6 +34,8 @@ data births;
 	num_visit_n = 1 * num_visit;
 	Year = 1 * birthyr ;
 
+	drop mage bweight gest_age num_visit;
+
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;
 	if bweight_n = 9999 then bweight_n = .u;
@@ -59,6 +61,7 @@ data births;
 	** Recode marital status **;
 	if mstatnew = "Married" then mstat = 1;
 		else if mstatnew = "Unmarried" then mstat = 2;
+		else mstat = .u;
 
 	** Fill in missing vars for 2010 - 2016 data **;
   
@@ -80,6 +83,8 @@ data births;
     
   
   	format date concept_dt mmddyy10.;
+
+	drop mage bweight gest_age num_visit mrace;
 
 run;
 
@@ -126,14 +131,43 @@ run;
 data births_geo_match;
 	set births_geo;
 	if M_ADDR ^= " " ;
+
+	city = "1";
 run;
 
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match births_geo_nomatch;
+	set births_geo_match births_geo_std;
+
+	mage = mage_n;
+	bweight = bweight_n;
+	gest_age = gest_age_n ;
+	num_visit = num_visit_n;
+	pre_care = pre_care_n;
+	mrace = mrace_num;
 
 	%Read_births_new ();
+
+	label mrace = "Mother's race"
+	      mage = "Mother's age at birth (years)"
+		  Bweight_lbs = "Child's birth weight (lbs)"
+		  bweight = "Child's birth weight (grams)"
+		  latino = "Mother's Hispanic/Latino origin"
+		  mstat = "Mother's marital status"
+		  num_visit = "Number of prenatal visits"
+		  year = "Year of birth"
+		  gest_age = "Gestational age of child (weeks)"
+		  mrace_num = "Mother's race UI re-code"
+		  ward = "Mother's ward of residence"
+		  concept_dt = "Date Conceived (UI estimated)"
+		  pre_care = "Weeks in to Pregnancy of first Prenatal Visit"
+;
+
+	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n
+		 birthmo birthdy kbweight kmage
+		 address address_std address_id x y ssl latitude longitude 
+		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_;
 
 run;
 
