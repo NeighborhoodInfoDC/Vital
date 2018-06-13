@@ -12,7 +12,17 @@
  Modifications:
 **************************************************************************/
 
-%macro Read_births_new ();
+%macro Read_births_new (
+calc_birthwt=Y,
+calc_single=Y,
+calc_prenat=Y,
+calc_preterm=Y
+);
+
+%let calc_birthwt = %upcase(&calc_birthwt.);
+%let calc_single = %upcase(&calc_single.);
+%let calc_prenat = %upcase(&calc_prenat.);
+%let calc_preterm = %upcase(&calc_preterm.);
 
 	** Total births **;
 	Births_total = 1;
@@ -131,6 +141,8 @@
 
 	label Births_w_agerace = "Births with age and race reported";
 
+	%if &calc_birthwt. = Y %then %do;
+
 	** By birth weight **;
 
     if not( missing ( bweight_lbs ) ) then do;
@@ -157,6 +169,9 @@
 	%By_age( Births_low_wt, with low birth weight (<5.5 lbs), Births );
     %By_age( Births_w_weight, with birth weight reported, Births );
 
+	%end; 
+
+	%if &calc_single. = Y %then %do;
 	  ** Single mother births **;
     
       if Mstat in ( 1, 2 ) then do;
@@ -180,6 +195,10 @@
         %By_age( Births_single, who were unmarried, Births );
         %By_age( Births_w_mstat, with marital status reported, Births );
 
+	%end;
+
+	%if &calc_prenat. = Y %then %do;
+
 	** Prenatal care **;
 
 	pre_care = pre_care_n;
@@ -197,6 +216,10 @@
         %By_age( Births_prenat_intr, with intermediate prenatal care, Births );
         %By_age( Births_prenat_inad, with inadequate prenatal care, Births );
         %By_age( Births_w_prenat, with prenatal care reported, Births );
+
+	%end;
+
+	%if &calc_preterm. = Y %then %do;
 
    ** Preterm births **;
 
@@ -230,6 +253,7 @@
         %By_age( Births_preterm, that occured preterm, Births );
         %By_age( Births_w_gest_age, with gestational age reported, Births );
 
+	%end;
 
 run;
 

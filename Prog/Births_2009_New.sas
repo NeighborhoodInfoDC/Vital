@@ -128,7 +128,7 @@ run;
 data births_geo_all;
 	set births_geo_match births_geo_std;
 
-	%Read_births_new ();
+	%Read_births_new (calc_prenat=N);
 
 run;
 
