@@ -32,6 +32,7 @@ data births;
 	bweight_n = 1 * bweight;
 	gest_age_n = 1 * gest_age;
 	num_visit_n = 1 * num_visit;
+	Year = 1 * birthyr ;
 
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;

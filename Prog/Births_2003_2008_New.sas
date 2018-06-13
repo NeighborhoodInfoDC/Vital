@@ -33,6 +33,7 @@ data births;
 	gest_age_n = 1 * gest_age;
 	num_visit_n = 1 * num_visit;
 	pre_care_n = 1 * pre_care;
+	Year = 1 * birthyr ;
 
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;
@@ -212,7 +213,15 @@ data births_geo_all;
 	
 	if missing( geo2010_alloc ) then geo2010_alloc = 0;
 
+	mage = mage_n;
+	bweight = bweight_n;
+	gest_age = gest_age_n ;
+	num_visit = num_visit_n;
+	pre_care = pre_care_n;
+
 	%Read_births_new ();
+
+	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n;
 
 run;
 
