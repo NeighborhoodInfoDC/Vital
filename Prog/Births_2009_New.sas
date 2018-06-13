@@ -76,6 +76,8 @@ data births;
   
   	format date mmddyy10.;
 
+	drop mage bweight gest_age num_visit mrace;
+
 run;
 
 
@@ -122,6 +124,8 @@ run;
 data births_geo_match;
 	set births_geo;
 	if M_ADDR ^= " " ;
+
+	city = "1";
 run;
 
 
@@ -134,10 +138,26 @@ data births_geo_all;
 	gest_age = gest_age_n ;
 	num_visit = num_visit_n;
 	pre_care = pre_care_n;
+	mrace = mrace_num;
 
 	%Read_births_new (calc_prenat=N);
 
-	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n;
+	label mrace = "Mother's race"
+	      mage = "Mother's age at birth (years)"
+		  Bweight_lbs = "Child's birth weight (lbs)"
+		  bweight = "Child's birth weight (grams)"
+		  latino = "Mother's Hispanic/Latino origin"
+		  mstat = "Mother's marital status"
+		  num_visit = "Number of prenatal visits"
+		  year = "Year of birth"
+		  gest_age = "Gestational age of child (weeks)"
+		  mrace_num = "Mother's age at birth (years) UI re-code"
+;
+
+	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n
+		 birthmo birthdy kbweight kmage
+		 address address_std address_id x y ssl latitude longitude 
+		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_;
 
 run;
 
