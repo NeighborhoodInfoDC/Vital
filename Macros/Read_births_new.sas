@@ -255,7 +255,6 @@ calc_preterm=Y
 
 	%end;
 
-run;
 
 %mend Read_births_new;
 
