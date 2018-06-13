@@ -159,21 +159,13 @@ run;
 data births_geo_2008_ward_notract births_geo_other;
 
   set births_geo_nomatch;
+  ward_ = ward +0;
   
   if missing( geo2010 ) and not( missing( ward ) ) and birthyr = '2008' 
     then output births_geo_2008_ward_notract;
   else output births_geo_other;
   
 run;
-
-
-/****
-** Subset ungeocodable records**;
-data births_ungeocodable;
-	set births_geo (keep = address fedtractno m_addr);
-	if fedtractno in ("000","999"," ") and m_addr = " " ;
-run;
-*****/
 
 
 ** Subset records that matched **;
