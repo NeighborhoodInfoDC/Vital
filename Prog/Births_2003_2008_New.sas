@@ -291,10 +291,7 @@ title2;
 %do year = 2003 %to 2008;
 
 data births_&year.;
-	set Births_geo_all;
-
-	** Keep only single year **;
-	where birthyr = "&year.";
+	set Births_geo_all (where=(year = &year.));
 	
 	** UI created  record number **;
 	RecordNo + 1;

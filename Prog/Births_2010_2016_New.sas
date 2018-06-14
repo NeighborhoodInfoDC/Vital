@@ -177,14 +177,12 @@ run;
 %do year = 2010 %to 2016;
 
 data births_&year.;
-	set Births_geo_all;
+	set Births_geo_all (where=(year = &year.));
 
 	** UI created  record number **;
 	RecordNo + 1;
     label RecordNo = "Record number (UI created)";
 
-	** Keep only single year **;
-	if birthyr = &year.;
 run;
 
 %Finalize_data_set( 
