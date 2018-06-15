@@ -33,12 +33,14 @@ data births;
 	gest_age_n = 1 * gest_age;
 	num_visit_n = 1 * num_visit;
 	Year = 1 * birthyr ;
+	pre_care_n = 1 * pre_care;
 
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;
 	if bweight_n = 9999 then bweight_n = .u;
 	if gest_age_n = 99 then gest_age_n = .u;
 	if num_visit_n = 99 then num_visit_n = .u;
+	if pre_care_n =. then pre_care_n = .u;
 
 	 ** Check birth dates **;
   
@@ -76,7 +78,7 @@ data births;
   
   	format date mmddyy10.;
 
-	drop mage bweight gest_age num_visit mrace;
+	drop mage bweight gest_age num_visit mrace pre_care;
 
 run;
 
@@ -152,6 +154,7 @@ data births_geo_all;
 		  year = "Year of birth"
 		  gest_age = "Gestational age of child (weeks)"
 		  mrace_num = "Mother's age at birth (years) UI re-code"
+		  pre_care = "Weeks in to Pregnancy of first Prenatal Visit"
 ;
 
 	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n

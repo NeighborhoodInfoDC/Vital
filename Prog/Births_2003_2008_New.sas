@@ -95,7 +95,7 @@ data births;
   
   	format date mmddyy10. fedtractno_ $3.;
 
-	drop mage bweight gest_age num_visit;
+	drop mage bweight gest_age num_visit pre_care;
 
 run;
 

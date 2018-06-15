@@ -84,7 +84,7 @@ data births;
   
   	format date concept_dt mmddyy10.;
 
-	drop mage bweight gest_age num_visit mrace;
+	drop mage bweight gest_age num_visit mrace pre_care;
 
 run;
 
