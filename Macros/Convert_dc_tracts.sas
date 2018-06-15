@@ -48,10 +48,12 @@
   %if &year >= 2005 %then %do;
    %*%if &type = BIRTHS %then %do;
   
-    %** Birth records: Assume tracts are 2000 first **;
+    %** Birth records: Assume tracts are 2010 first **;
   
     if tract_full ~= "" then do;
-	  if put( tract_full, $geo00v. ) ~= "" then
+	if put( tract_full, $geo10v. ) ~= "" then
+        Tract_yr = 2010;
+	else if put( tract_full, $geo00v. ) ~= "" then
         Tract_yr = 2000;
       else if put( tract_full, $geo90v. ) ~= "" then
         Tract_yr = 1990;
@@ -60,12 +62,12 @@
       else if put( tract_full, $geo70v. ) ~= "" then
         Tract_yr = 1970;
       else do;
-        %warn_put( msg="Invalid tract ID: " RecordNo= dctract= tract_full= ward= )
+        %warn_put( msg="Invalid tract ID: " _n_= dctract= tract_full= ward= )
         tract_full = "";
       end;
     end;
     else if dctract not in ( "", "000" ) then do;
-        %warn_put( msg="Invalid tract ID: " RecordNo= dctract= ward= )
+        %warn_put( msg="Invalid tract ID: " _n_= dctract= ward= )
     end;
     
   %*%end;
@@ -83,12 +85,12 @@
       else if put( tract_full, $geo70v. ) ~= "" then
         Tract_yr = 1970;
       else do;
-        %warn_put( msg="Invalid tract ID: " RecordNo= dctract= tract_full= ward= )
+        %warn_put( msg="Invalid tract ID: " _n_= dctract= tract_full= ward= )
         tract_full = "";
       end;
     end;
     else if dctract not in ( "", "000" ) then do;
-        %warn_put( msg="Invalid tract ID: " RecordNo= dctract= ward= )
+        %warn_put( msg="Invalid tract ID: " _n_= dctract= ward= )
     end;
     
   %end;
@@ -104,12 +106,12 @@
       else if put( tract_full, $geo70v. ) ~= "" then
         Tract_yr = 1970;
       else do;
-        %warn_put( msg="Invalid tract ID: " RecordNo= dctract= tract_full= ward= )
+        %warn_put( msg="Invalid tract ID: " _n_= dctract= tract_full= ward= )
         tract_full = "";
       end;
     end;
     else if dctract not in ( "", "000" ) then do;
-        %warn_put( msg="Invalid tract ID: " RecordNo= dctract= ward= )
+        %warn_put( msg="Invalid tract ID: " _n_= dctract= ward= )
     end;
     
    %end;
