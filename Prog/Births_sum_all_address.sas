@@ -30,6 +30,22 @@ data Births ;
 	   ;
 run;
 
+proc contents data = births out=births_contents noprint; run;
+
+data births_vars;
+	set births_contents;
+	keep name;
+run;
+
+
+proc sql noprint;
+	select name
+	into :blist separated by " "
+	from births_vars;
+quit;
+
+%put &blist.;
+
 /** Macro Summarize - Start Definition **/
 
 %macro Summarize( level= );
@@ -92,7 +108,7 @@ run;
 %Super_transpose( 
   data=Births&filesuf,
   out=Births_sum&filesuf,
-  var=Births_total Births_single,
+  var=&blist.,
   id=BIRTHYR,
   by=&level,
   mprint=y
