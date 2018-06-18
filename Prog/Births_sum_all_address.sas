@@ -19,11 +19,13 @@
 ** Define libraries **;
 %DCData_lib( Vital )
 
+
+
 /** Update with latest full year and quarter of sales data available **/
-data Births;
-   set Vital.Births_1998 Vital.Births_1999 Vital.Births_2000 Vital.Births_2001 Vital.Births_2002 Vital.Births_2003 
+data Births ;
+   set /*Vital.Births_1998 Vital.Births_1999 Vital.Births_2000 Vital.Births_2001 Vital.Births_2002 Vital.Births_2003
        Vital.Births_2004 Vital.Births_2005 Vital.Births_2006 Vital.Births_2007 Vital.Births_2008 Vital.Births_2009
-	   Vital.Births_2010 Vital.Births_2011 Vital.Births_2012 Vital.Births_2013 Vital.Births_2014 Vital.Births_2015
+	   Vital.Births_2010 Vital.Births_2011 Vital.Births_2012 Vital.Births_2013 Vital.Births_2014*/ Vital.Births_2015
 	   Vital.Births_2016 
 	   ;
 run;
@@ -55,7 +57,7 @@ proc summary data=Births;
   var Births_: ;
   output 
     out=Births&filesuf (drop=_freq_ _type_  compress=no) 
-    sum(Births_:)=
+    sum(Births_:)=;
 run;
 
 ** Recode missing number of sales to 0 **;
@@ -64,10 +66,10 @@ data Births&filesuf (compress=no);
 
   set Births&filesuf;
   
-  array Births ;
+ array a_births{*} births_: ;
   
-  do i = 1 to dim( a_sales );
-    if missing( a_sales{i} ) then a_sales{i} = 0;
+  do i = 1 to dim( a_births );
+    if missing( a_births{i} ) then a_births{i} = 0;
   end;
   
   drop i;
@@ -85,12 +87,12 @@ data Births&filesuf;
 run;
 %end;
 
-%let file_lbl = Birhts summary, DC, &level_lbl;
+%let file_lbl = Births summary, DC, &level_lbl;
 
 %Super_transpose( 
   data=Births&filesuf,
   out=Births_sum&filesuf,
-  var=Births_:,
+  var=Births_total Births_single,
   id=BIRTHYR,
   by=&level,
   mprint=y
@@ -98,7 +100,7 @@ run;
 
 quit;
 
-%let revisions=Updated through 2016.
+%let revisions=Updated through 2016.;
 
  %put revisions=&revisions;
 
