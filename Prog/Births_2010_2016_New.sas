@@ -61,9 +61,8 @@ data births;
 		else if latino_new = "Hispanic" then latino = "Y";
 
 	** Recode marital status **;
-	if mstatnew = "Married" then mstat = 1;
-		else if mstatnew = "Unmarried" then mstat = 2;
-		else mstat = .u;
+	if mstatnew = "Married" then mstat = "Y";
+		else if mstatnew = "Unmarried" then mstat = "N";
 
 	** Fill in missing vars for 2010 - 2016 data **;
   
@@ -164,6 +163,7 @@ data births_geo_all;
 		  ward = "Mother's ward of residence"
 		  concept_dt = "Date Conceived (UI estimated)"
 		  pre_care = "Weeks in to Pregnancy of first Prenatal Visit"
+		  plural = "Count of single/plural births"
 ;
 
 	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n

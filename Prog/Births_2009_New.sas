@@ -61,9 +61,8 @@ data births;
 		else if latino_new = "Hispanic" then latino = "Y";
 
 	** Recode marital status **;
-	if mstatnew = "Married" then mstat = 1;
-		else if mstatnew = "Unmarried" then mstat = 2;
-		else mstat = .u;
+	if mstatnew = "Married" then mstat = "Y";
+		else if mstatnew = "Unmarried" then mstat = "N";
 
 	  if 0 < mage_n < 20 then kMage = 1;
   		else if 20 <= mage_n then kMage = 0;
@@ -157,6 +156,7 @@ data births_geo_all;
 		  gest_age = "Gestational age of child (weeks)"
 		  mrace_num = "Mother's age at birth (years) UI re-code"
 		  pre_care = "Weeks in to Pregnancy of first Prenatal Visit"
+		  plural = "Count of single/plural births"
 ;
 
 	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n

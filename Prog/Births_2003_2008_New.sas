@@ -64,9 +64,8 @@ data births;
 		else if latino_new = "Hispanic" then latino = "Y";
 
 	** Recode marital status **;
-	if mstatnew = "Married" then mstat = 1;
-		else if mstatnew = "Unmarried" then mstat = 2;
-		else mstat = .u;
+	if mstatnew = "Married" then mstat = "Y";
+		else if mstatnew = "Unmarried" then mstat = "N";
 
 	  if 0 < mage_n < 20 then kMage = 1;
   		else if 20 <= mage_n then kMage = 0;
