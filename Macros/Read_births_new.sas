@@ -174,8 +174,8 @@ calc_preterm=Y
 	%if &calc_single. = Y %then %do;
 	  ** Single mother births **;
     
-      if Mstat in ( 1, 2 ) then do;
-        if Mstat in ( 2 ) then Births_single = 1;
+      if Mstat in ( "N", "Y", "1", "2" ) then do;
+        if Mstat in ( "N", "2" ) then Births_single = 1;
         else Births_single = 0;
         Births_w_mstat = 1;
       end;
