@@ -34,6 +34,7 @@ data births;
 	num_visit_n = 1 * num_visit;
 	Year = 1 * birthyr ;
 	pre_care_n = 1 * pre_care;
+	plural_n = 1* plural;
 
 	** Code missings **;
 	if mage_n = 99 then mage_n = .u;
@@ -41,6 +42,7 @@ data births;
 	if gest_age_n = 99 then gest_age_n = .u;
 	if num_visit_n = 99 then num_visit_n = .u;
 	if pre_care_n =. then pre_care_n = .u;
+	if plural_n in (9,99) then plural_n = .u;
 
 	 ** Check birth dates **;
   
@@ -78,7 +80,7 @@ data births;
   
   	format date mmddyy10.;
 
-	drop mage bweight gest_age num_visit mrace pre_care;
+	drop mage bweight gest_age num_visit pre_care plural;
 
 run;
 
@@ -140,7 +142,7 @@ data births_geo_all;
 	gest_age = gest_age_n ;
 	num_visit = num_visit_n;
 	pre_care = pre_care_n;
-	mrace = mrace_num;
+	plural = plural_n;
 
 	%Read_births_new (calc_prenat=N);
 
@@ -158,7 +160,7 @@ data births_geo_all;
 ;
 
 	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n
-		 birthmo birthdy kbweight kmage
+		 birthmo birthdy kbweight kmage plural_n
 		 address address_std address_id x y ssl latitude longitude 
 		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_;
 
