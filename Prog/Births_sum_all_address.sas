@@ -35,14 +35,14 @@ proc contents data = births out=births_contents noprint; run;
 data births_vars;
 	set births_contents;
 	keep name;
-	*modify births_vars;
-	*keep if find(name, "births_"); 
+	name_u = upcase(name);
+    if find(name_u, "BIRTHS_"); 
 run;
 
 proc sql noprint;
 	select name
 	into :blist separated by " "
-	from births_vars where name not contains('births_');
+	from births_vars;
 quit;
 
 %put &blist.;
