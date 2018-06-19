@@ -23,14 +23,17 @@
 
 /** Update with latest full year and quarter of sales data available **/
 data Births ;
-   set /*Vital.Births_1998 Vital.Births_1999 Vital.Births_2000 Vital.Births_2001 Vital.Births_2002 Vital.Births_2003
+   set Vital.Births_1998 Vital.Births_1999 Vital.Births_2000 Vital.Births_2001 Vital.Births_2002 Vital.Births_2003
        Vital.Births_2004 Vital.Births_2005 Vital.Births_2006 Vital.Births_2007 Vital.Births_2008 Vital.Births_2009
-	   Vital.Births_2010 Vital.Births_2011 Vital.Births_2012 Vital.Births_2013 Vital.Births_2014*/ Vital.Births_2015
+	   Vital.Births_2010 Vital.Births_2011 Vital.Births_2012 Vital.Births_2013 Vital.Births_2014 Vital.Births_2015
 	   Vital.Births_2016 
 	   ;
 run;
 
+
+/** Use proc contents to create varlist for transpose **/
 proc contents data = births out=births_contents noprint; run;
+proc sort data = births_contents; by varnum; run;
 
 data births_vars;
 	set births_contents;
@@ -46,6 +49,7 @@ proc sql noprint;
 quit;
 
 %put &blist.;
+
 
 /** Macro Summarize - Start Definition **/
 
@@ -81,7 +85,7 @@ run;
 
 data Births&filesuf (compress=no);
 
-  set Births&filesuf;
+  set Births&filesuf (where=(&level ^= " " and birthyr ^= " "));
   
  array a_births{*} births_: ;
   
