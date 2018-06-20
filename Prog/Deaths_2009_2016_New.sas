@@ -285,8 +285,9 @@ run;
 
 data deaths_geo_ward_notract_hd;
 	set deaths_geo_ward_notract_hd;
-	drop Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 
+	drop Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 city
 						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 bridgepk stantoncommons cluster2017 ;
+	city = "1";
 run;
 
 
