@@ -125,43 +125,181 @@ run;
 );
 
 
+/* Subset matched records */
+data deaths_geo_match;
+	set deaths_geo;
+	if m_addr ^= " ";
+	retain hotdeck_wt 1;
+  	city = "1";
+run;
+
+
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data deaths_geo_nomatch;
 	set deaths_geo (drop=address_std y x ADDRESS_ID Anc2002 Anc2012 Cluster_tr2000 Geo2000 Geo2010 GeoBg2010 GeoBlk2010 
-						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 M_CITY M_STATE M_ZIP M_OBS
-						 _STATUS_ _NOTES_ _SCORE_);
-	if M_ADDR = " " ;
+						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 bridgepk stantoncommons cluster2017 
+					     M_CITY M_STATE M_ZIP M_OBS _STATUS_ _NOTES_ _SCORE_);
+	if m_addr = " " ;
 
-	tract2 = compress(tract,,'p');
-	tract3 = put(input(tract2,best4.),z4.);
-	geo2010 = "11"||"001"||"00"||tract3;
+	/* Fix messed up tract codes */
+	if dyear = "2013" then do;
+		if tract = "0038" then tract_fix = "003800";
+		if tract = "0097" then tract_fix = "009700";
+		if tract = "0104" then tract_fix = "010400";
+		if tract = "0109" then tract_fix = "010900";
+		if tract_fix ^= " " then fixed = 1;
+	end;
 
-	/** Create Geo2010 from fedtractno **;
-	if fedtractno in ("000000","999999"," ") then delete;
-	geo2010 = "11"||"001"||fedtractno;
-	format geo2010 $11.;*/
+	if dyear = "2012" then do;
+		if tract = "0024" then tract_fix = "002400";
+		if tract = "0031" then tract_fix = "003100";
+		if tract = "0043" then tract_fix = "004300";
+		if tract = "0051" then tract_fix = "005100";
+		if tract = "0055" then tract_fix = "005500";
+		if tract = "0065" then tract_fix = "006500";
+		if tract = "0067" then tract_fix = "006700";
+		if tract = "0090" then tract_fix = "009000";
+		if tract_fix ^= " " then fixed = 1;
+	end;
+
+	if dyear = "2011" then do;
+		if tract = "0040" then tract_fix = "004000";
+		if tract = "0090" then tract_fix = "009000";
+		if tract_fix ^= " " then fixed = 1;
+
+	end;
+
+	if dyear = "2009" then do;
+		tract=compress(tract,,'s');
+		if tract = "." then tract_fix = " ";
+		if tract = "1" then tract_fix = "000100";
+		if tract = "10.01" then tract_fix = "001001";
+		if tract = "11" then tract_fix = "001100";
+		if tract = "110" then tract_fix = "011000";
+		if tract = "36" then tract_fix = "003600";
+		if tract = "37" then tract_fix = "003700";
+		if tract = "39" then tract_fix = "003900";
+		if tract = "46" then tract_fix = "004600";
+		if tract = "47" then tract_fix = "004700";
+		if tract = "50" then tract_fix = "005000";
+		if tract = "51" then tract_fix = "005100";
+		if tract = "56" then tract_fix = "005600";
+		if tract = "58" then tract_fix = "005800";
+		if tract = "64" then tract_fix = "006400";
+		if tract = "67" then tract_fix = "006700";
+		if tract = "90" then tract_fix = "009000";
+		if tract = "110" then tract_fix = "011000";
+		if tract = "7.01" then tract_fix = "000701";
+		if tract = "10.01" then tract_fix = "001001";
+		if tract = "13.02" then tract_fix = "001302";
+		if tract = "14.01" then tract_fix = "001401";
+		if tract = "18.03" then tract_fix = "001803";
+		if tract = "18.04" then tract_fix = "001804";
+		if tract = "19.01" then tract_fix = "001901";
+		if tract = "19.02" then tract_fix = "001902";
+		if tract = "21.01" then tract_fix = "002101";
+		if tract = "21.02" then tract_fix = "002102";
+		if tract = "23.01" then tract_fix = "002301";
+		if tract = "23.02" then tract_fix = "002302";
+		if tract = "25.01" then tract_fix = "002501";
+		if tract = "27.01" then tract_fix = "002701";
+		if tract = "28.02" then tract_fix = "002802";
+		if tract = "40.01" then tract_fix = "004001";
+		if tract = "48.01" then tract_fix = "004801";
+		if tract = "48.02" then tract_fix = "004802";
+		if tract = "68.02" then tract_fix = "006802";
+		if tract = "73.02" then tract_fix = "007302";
+		if tract = "74.04" then tract_fix = "007404";
+		if tract = "74.06" then tract_fix = "007406";
+		if tract = "75.02" then tract_fix = "007502";
+		if tract = "75.03" then tract_fix = "007503";
+		if tract = "76.04" then tract_fix = "007604";
+		if tract = "76.05" then tract_fix = "007605";
+		if tract = "77.03" then tract_fix = "007703";
+		if tract = "77.09" then tract_fix = "007709";
+		if tract = "78.04" then tract_fix = "007804";
+		if tract = "78.08" then tract_fix = "007808";
+		if tract = "79.01" then tract_fix = "007901";
+		if tract = "89.03" then tract_fix = "008903";
+		if tract = "92.03" then tract_fix = "009203";
+		if tract = "95.03" then tract_fix = "009503";
+		if tract = "95.05" then tract_fix = "009505";
+		if tract = "95.07" then tract_fix = "009507";
+		if tract = "95.09" then tract_fix = "009509";
+		if tract = "96.03" then tract_fix = "009603";
+		if tract = "96.04" then tract_fix = "009604";
+		if tract = "98.07" then tract_fix = "009807";
+		if tract = "98.08" then tract_fix = "009808";
+		if tract = "99.02" then tract_fix = "009902";
+		if tract = "99.06" then tract_fix = "009906";
+		if tract in ("610","731","732","763","901","958") then tract_fix = " ";
+		if tract_fix ^= " " then fixed = 1;
+	end;
+
+	if tract not in ("0000","9999"," ",".") and fixed ^= 1 then do;
+		tract_fix = "00"||tract;
+	end; 
+
+	/* Create final geo2010 variable */
+	if tract_fix ^= " "  then do;
+		geo2010 = "11"||"001"||tract_fix;
+	end;
 
 run;
 
+/* Append geos based on geo2010 */
 %tr10_to_stdgeos( 
-  in_ds=births_geo_nomatch, 
-  out_ds=births_geo_std
+  in_ds=deaths_geo_nomatch, 
+  out_ds=deaths_geo_std
 );
 
 
 ** Subset ungeocodable records**;
-data births_ungeocodable;
-	set births_geo (keep = address fedtractno m_addr);
-	if fedtractno in ("000000","999999"," ") and m_addr = " " ;
+data deaths_ungeocodable deaths_std_match;
+	set deaths_geo_std ;
+	if city = " " then output deaths_ungeocodable ;
+		else output deaths_std_match;
+run;
+
+data births_geo_2008_ward_notract births_geo_other;
+
+  set births_geo_nomatch;
+  ward_ = ward +0;
+  
+  if missing( geo2010 ) and not( missing( ward ) ) and birthyr = '2008' 
+    then output births_geo_2008_ward_notract;
+  else output births_geo_other;
+  
+run;
+
+%Hot_deck2( 
+  by=dyear,
+  data=deaths_ungeocodable, 
+  source=deaths_geo_match, 
+  alloc=geo2010, 
+  weight=hotdeck_wt, 
+  out=deaths_geo_ward_notract_hd,
+  print=n
+)  
+
+
+data deaths_geo_ward_notract_hd;
+	set deaths_geo_ward_notract_hd;
+	drop Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 
+						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 bridgepk stantoncommons cluster2017 ;
 run;
 
 
-** Subset records that matched **;
-data births_geo_match;
-	set births_geo;
-	if M_ADDR ^= " " ;
+/* Append geos based on geo2010 */
+%tr10_to_stdgeos( 
+  in_ds=deaths_geo_ward_notract_hd, 
+  out_ds=deaths_geo_ward_notract_hd_std
+);
 
-	city = "1";
+
+** Combine matched and non-matched files back together **;
+data deaths_geo_all;
+	set deaths_geo_match deaths_std_match deaths_geo_ward_notract_hd_std;
 run;
 
 
