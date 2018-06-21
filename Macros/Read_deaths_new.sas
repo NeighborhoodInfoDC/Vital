@@ -146,6 +146,7 @@ calc_cause=Y
       Deaths_20to24 = "Deaths to persons 20-24 years old"
       Deaths_w_age = "Deaths with age reported";
     
+	  %if &calc_race. = Y %then %do;
       %By_race( Deaths_infant, under 1 year old, Deaths, var2=deaths, pop=infants )
       %By_race( Deaths_under18, under 18 years old, Deaths, var2=deaths, pop=children )
       %By_race( Deaths_adult, 18+ years old, Deaths, var2=deaths, pop=adults )
@@ -154,7 +155,9 @@ calc_cause=Y
       %By_race( Deaths_15to19, 15-19 years old, Deaths, var2=deaths, pop=persons )
       %By_race( Deaths_20to24, 20-24 years old, Deaths, var2=deaths, pop=persons )
       %By_race( Deaths_w_age, with age reported, Deaths, var2=deaths, pop=persons )
-    
+      %end;
+
+	  %if &calc_sex. = Y %then %do;
       %By_sex( Deaths_15to19, 15-19 years old )
       %By_sex( Deaths_20to24, 20-24 years old )
       Deaths_15to19_w_sex  = Deaths_15to19 * Deaths_w_sex;
@@ -162,14 +165,14 @@ calc_cause=Y
       label
         Deaths_15to19_w_sex  = "Deaths to persons 15-19 years old with sex reported"
         Deaths_20to24_w_sex  = "Deaths to persons 20-24 years old with sex reported";
-
+	  %end;
 	%end;
 
-	%%if &calc_cause. = Y %then %do;
+	%if &calc_cause. = Y %then %do;
     
     ** By cause of death **;
     
-    if not( missing( put( Icd10_3d, $Icd13v. ) ) ) then do;
+    if not( missing( put( Icd10_3d, $icd10s. ) ) ) then do;
     
       Deaths_heart = 0;
       Deaths_cancer = 0;
@@ -234,6 +237,7 @@ calc_cause=Y
       Deaths_oth_caus = 'Deaths from other causes'
       Deaths_w_cause = 'Deaths with cause reported';
       
+	  %if &calc_sex. = Y %then %do;
       %By_sex( Deaths_heart, from heart disease )
       %By_sex( Deaths_cancer, from cancer )
       %By_sex( Deaths_hiv, from HIV )
@@ -244,15 +248,18 @@ calc_cause=Y
       %By_sex( Deaths_respitry, from respitory diseases )
       %By_sex( Deaths_oth_caus, from other causes )
       %By_sex( Deaths_w_cause, with cause reported )
-    
-    ** Violent deaths **;
 
+	   ** Violent crimes by sex **;
+       %By_sex( Deaths_violent, , type=Violent deaths )
+      %end;
+
+	 %if &calc_race. = Y %then %do;
      ** Violent crimes by race **;
         %By_race( Deaths_violent, ,Violent deaths, var2=deaths, pop=persons )
-      
-     ** Violent crimes by sex **;
-        %By_sex( Deaths_violent, , type=Violent deaths )
-      
+      %end;
+
+	  %if &calc_age. = Y %then %do;
+
       ** 15 to 19 years old **;
       
       Deaths_violent_15to19 = Deaths_violent * Deaths_15to19;
@@ -286,6 +293,8 @@ calc_cause=Y
       
       Deaths_w_cause_20to24 = Deaths_w_cause * Deaths_20to24;
       label Deaths_w_cause_20to24 = "Deaths to persons 20-24 years old with cause reported";
+
+	  %end;
 
 	  %end;
 
