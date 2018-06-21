@@ -1,5 +1,5 @@
 /**************************************************************************
- Program:  Read_births_new.sas
+ Program:  Read_deaths_new.sas
  Library:  Vital
  Project:  NeighborhoodInfo DC
  Author:   Rob Pitingolo
@@ -7,255 +7,289 @@
  Version:  SAS 9.4
  Environment:  Windows with SAS/Connect
  
- Description:  Macro to create indicators for births_yyyy
+ Description:  Macro to create indicators for deaths_yyyy
 
  Modifications:
 **************************************************************************/
 
-%macro Read_births_new (
-calc_birthwt=Y,
-calc_single=Y,
-calc_prenat=Y,
-calc_preterm=Y
+%macro Read_deaths_new (
+calc_sex=Y,
+calc_race=Y,
+calc_age=Y,
+calc_cause=Y
 );
 
-%let calc_birthwt = %upcase(&calc_birthwt.);
-%let calc_single = %upcase(&calc_single.);
-%let calc_prenat = %upcase(&calc_prenat.);
-%let calc_preterm = %upcase(&calc_preterm.);
+%let calc_sex = %upcase(&calc_sex.);
+%let calc_race = %upcase(&calc_race.);
+%let calc_age = %upcase(&calc_age.);
+%let calc_cause = %upcase(&calc_cause.);
 
-	** Total births **;
-	Births_total = 1;
-    label Births_total = "Total births";
+	** Total deaths **;
 
-	** Births by race / ethnicity **;
-
-	if not( missing( latino ) ) and not( missing( mrace_num ) ) then do;
+	length Deaths_total 3;
     
-      Births_white = 0;
-      Births_black = 0;
-      Births_hisp = 0;
-      Births_asian = 0;
-      Births_oth_rac = 0;
-
-      Births_w_race = 1;
+    Deaths_total = 1;
     
-      if latino = "N" then do;
+    label Deaths_total = "Total deaths";
+    
+	%if &calc_sex. = Y %then %do;
+
+      ** By sex **;
       
-        select( mrace_num );
-          when ( '1' ) Births_white = 1;
-          when ( '2' ) Births_black = 1;
-          when ( '4', '5', '6', '7', '8' ) Births_asian = 1;
-          when ( '0', '3' ) Births_oth_rac = 1;
+      select ( sex );
+        when ( 1 ) do;
+          Deaths_male = 1;
+          Deaths_female = 0;
+          Deaths_w_sex = 1;
         end;
-        
-      end;
-      else do;
-        Births_hisp = 1;
-      end;
-    
-    end;
-    else do;
-      Births_w_race = 0;
-    end;
-    
-    label
-      Births_white = "Births to non-Hisp. white mothers"
-      Births_black = "Births to non-Hisp. black mothers"
-      Births_hisp = "Births to Hispanic/Latino mothers"
-      Births_asian = "Births to non-Hisp. Asian/Pacific Islander mothers"
-      Births_oth_rac = "Births to non-Hisp. other race mothers"
-      Births_w_race = "Births with mother's race reported";
-
-
-	** Births by age of mother **;
-    
-    if not( missing( mage_n ) ) then do;
-
-      Births_w_age = 1;
-
-      if mage_n < 15 then Births_0to14 = 1;
-      else Births_0to14 = 0;
-
-	  if 15 <= mage_n <= 19 then Births_15to19 = 1;
-      else Births_15to19 = 0;
-
-      if 20 <= mage_n <= 24 then Births_20to24 = 1;
-      else Births_20to24 = 0;
-
-	  if 25 <= mage_n <= 29 then Births_25to29 = 1;
-      else Births_25to29 = 0;
-
-	  if 30 <= mage_n <= 34 then Births_30to34 = 1;
-      else Births_30to34 = 0;
-
-	  if 35 <= mage_n <= 39 then Births_35to39 = 1;
-      else Births_35to39 = 0;
-
-	  if 40 <= mage_n <= 44 then Births_40to44 = 1;
-      else Births_40to44 = 0;
-
-	  if mage_n >= 45 then Births_45plus = 1;
-      else Births_45plus = 0;
-    
-      if mage_n < 20 then Births_teen = 1;
-      else Births_teen = 0;
-    
-      if mage_n < 18 then Births_under18 = 1;
-      else Births_under18 = 0;
-  
-    
-    end;
-    else do;
-      Births_w_age = 0;
-    end;
-    
-    label 
-      Births_Teen = "Births to mothers under 20 years old"
-      Births_under18 = "Births to mothers under 18 years old"
-      Births_0to14 = "Births to mothers under 15 years old"
-	  Births_15to19 = "Births to mothers 15-19 years old"
-      Births_20to24 = "Births to mothers 20-24 years old"
-	  Births_25to29 = "Births to mothers 25-29 years old"
-	  Births_30to34 = "Births to mothers 30-34 years old"
-	  Births_35to39 = "Births to mothers 35-39 years old"
-	  Births_40to44 = "Births to mothers 40-44 years old"
-	  Births_45plus = "Births to mothers 45 and over years old"
-      Births_w_age = "Births with mother's age reported";
-
-	** Births by age AND race **;
-	  %By_race( Births_teen, under 20 years old, Births );
-      %By_race( Births_under18, under 18 years old, Births );
-      %By_race( Births_0to14, under 15 years old, Births );
-	  %By_race( Births_15to19, 15-19 years old, Births );
-      %By_race( Births_20to24, 20-24 years old, Births );
-	  %By_race( Births_25to29, 25-29 years old, Births );
-	  %By_race( Births_30to34, 30-34 years old, Births );
-	  %By_race( Births_35to39, 35-39 years old, Births );
-	  %By_race( Births_40to44, 40-44 years old, Births );
-	  %By_race( Births_45plus, 45 and over years old, Births );
-      %By_race( Births_w_age, with age reported, Births );
-
-	if Births_w_age = 1 and Births_w_race = 1 then Births_w_agerace = 1;
-		else Births_w_agerace = 0;
-
-	label Births_w_agerace = "Births with age and race reported";
-
-	%if &calc_birthwt. = Y %then %do;
-
-	** By birth weight **;
-
-    if not( missing ( bweight_lbs ) ) then do;
-    
-      Births_w_weight = 1;
-    
-      if bweight_lbs < 5.5 then Births_low_wt = 1;
-      else Births_low_wt = 0;
-    
-    end;
-    else do;
-      Births_w_weight = 0;
-    end;    
-    
-    label
-      Births_low_wt = "Births with low birth weight (<5.5 lbs)"
-      Births_w_weight = "Births with birth weight reported";
-
-	** By birth weight AND race **;
-	%By_race( Births_low_wt, with low birth weight (<5.5 lbs), Births );
-    %By_race( Births_w_weight, with birth weight reported, Births );
-
-	** By birth weight AND age **;
-	%By_age( Births_low_wt, with low birth weight (<5.5 lbs), Births );
-    %By_age( Births_w_weight, with birth weight reported, Births );
-
-	%end; 
-
-	%if &calc_single. = Y %then %do;
-	  ** Single mother births **;
-    
-      if Mstat in ( "N", "Y", "1", "2" ) then do;
-        if Mstat in ( "N", "2" ) then Births_single = 1;
-        else Births_single = 0;
-        Births_w_mstat = 1;
-      end;
-      else if missing( Mstat ) then do;
-        Births_w_mstat = 0;
-      end;
-
-      label
-        Births_Single = "Births to unmarried mothers"
-        Births_w_mstat = "Births with mother's marital status reported";
-
-	** Single mother births by race **;
-        %By_race( Births_single, who were unmarried, Births );
-        %By_race( Births_w_mstat, with marital status reported, Births );
-
-	** Single mother births by age **;
-        %By_age( Births_single, who were unmarried, Births );
-        %By_age( Births_w_mstat, with marital status reported, Births );
-
-	%end;
-
-	%if &calc_prenat. = Y %then %do;
-
-	** Prenatal care **;
-
-	pre_care = pre_care_n;
-          
-      %Prenatal_kessner()
-      
-        %By_race( Births_prenat_1st, with prenatal care in 1st trimester, Births );
-        %By_race( Births_prenat_adeq, with adequate prenatal care, Births );
-        %By_race( Births_prenat_intr, with intermediate prenatal care, Births );
-        %By_race( Births_prenat_inad, with inadequate prenatal care, Births );
-        %By_race( Births_w_prenat, with prenatal care reported, Births );
-      
-        %By_age( Births_prenat_1st, with prenatal care in 1st trimester, Births );
-        %By_age( Births_prenat_adeq, with adequate prenatal care, Births );
-        %By_age( Births_prenat_intr, with intermediate prenatal care, Births );
-        %By_age( Births_prenat_inad, with inadequate prenatal care, Births );
-        %By_age( Births_w_prenat, with prenatal care reported, Births );
-
-	%end;
-
-	%if &calc_preterm. = Y %then %do;
-
-   ** Preterm births **;
-
-	gest_age = gest_age_n;
-      
-      if gest_age > 0 then do;
-      
-        if gest_age < 37 then Births_preterm = 1;
-        else Births_preterm = 0;
-        
-        Births_w_gest_age = 1;
-        
-      end;
-      else do;
-      
-        Births_preterm = .u;
-        Births_w_gest_age = 0;
-        
+        when ( 2 ) do;
+          Deaths_male = 0;
+          Deaths_female = 1;
+          Deaths_w_sex = 1;
+        end;
+        otherwise do;
+          Deaths_w_sex = 0;
+        end;
       end;
       
       label 
-        Births_preterm = "Preterm births (<37 gestational weeks)"
-        Births_w_gest_age = "Births with gestational age reported"
-		Births_w_agerace= "Births with mother's age and race reported"
-		
-;
+        Deaths_male = "Deaths to males"
+        Deaths_female = "Deaths to females"
+        Deaths_w_sex = "Deaths with sex reported";
+    
+    %end;
 
-        %By_race( Births_preterm, that occured preterm, Births );
-        %By_race( Births_w_gest_age, with gestational age reported, Births );
+	%if &calc_race. = Y %then %do;
+    
+      ** By race/ethnicity **;
+      
+      if not( missing( latino ) ) and not( missing( Race_n ) ) then do;
+      
+        Deaths_white = 0;
+        Deaths_black = 0;
+        Deaths_hisp = 0;
+        Deaths_asian = 0;
+        Deaths_oth_rac = 0;
 
-        %By_age( Births_preterm, that occured preterm, Births );
-        %By_age( Births_w_gest_age, with gestational age reported, Births );
+        Deaths_w_race = 1;
+      
+        if latino = "N" then do;
+        
+          select( Race_n );
+            when ( 1 ) Deaths_white = 1;
+            when ( 2 ) Deaths_black = 1;
+            when ( 3) Deaths_asian = 1;
+            when ( 4 ) Deaths_oth_rac = 1;
+          end;
+          
+        end;
+        else do;
+          Deaths_hisp = 1;
+        end;
+      
+      end;
+      else do;
+        Deaths_w_race = 0;
+      end;
+      
+      label
+        Deaths_white = "Deaths to white persons"
+        Deaths_black = "Deaths to black persons"
+        Deaths_hisp = "Deaths to Latino persons"
+        Deaths_asian = "Deaths to Asian/Pacific Islander persons"
+        Deaths_oth_rac = "Deaths to other race persons"
+        Deaths_w_race = "Deaths with race reported";
+        
+	%end;
+
+	%if &calc_age. = Y %then %do;
+    
+    ** By age **;
+    
+    if not( missing( age_calc ) ) then do;
+
+      Deaths_w_age = 1;
+      
+      if age_calc < 1 then Deaths_infant = 1;
+      else Deaths_infant = 0;
+
+      if 1 <= age_calc < 15 then Deaths_1to14 = 1;
+      else Deaths_1to14 = 0;
+
+      if 15 <= age_calc < 20 then Deaths_15to19 = 1;
+      else Deaths_15to19 = 0;
+
+      if 20 <= age_calc < 25 then Deaths_20to24 = 1;
+      else Deaths_20to24 = 0;
+    
+      if age_calc < 18 then Deaths_under18 = 1;
+      else Deaths_under18 = 0;
+      
+      if 18 <= age_calc then Deaths_adult = 1;
+      else Deaths_adult = 0;
+      
+      if 65 <= age_calc then Deaths_senior = 1;
+      else Deaths_senior = 0;
+    
+    end;
+    else do;
+      Deaths_w_age = 0;
+    end;
+    
+    label 
+      Deaths_infant = "Deaths to infants under 1 year old"
+      Deaths_under18 = "Deaths to children under 18 years old"
+      Deaths_adult = "Deaths to adults 18+ years old"
+      Deaths_senior = "Deaths to seniors 65+ years old"
+      Deaths_1to14 = "Deaths to children 1-14 years old"
+      Deaths_15to19 = "Deaths to persons 15-19 years old"
+      Deaths_20to24 = "Deaths to persons 20-24 years old"
+      Deaths_w_age = "Deaths with age reported";
+    
+      %By_race( Deaths_infant, under 1 year old, Deaths, var2=deaths, pop=infants )
+      %By_race( Deaths_under18, under 18 years old, Deaths, var2=deaths, pop=children )
+      %By_race( Deaths_adult, 18+ years old, Deaths, var2=deaths, pop=adults )
+      %By_race( Deaths_senior, 65+ years old, Deaths, var2=deaths, pop=seniors )
+      %By_race( Deaths_1to14, 1-14 years old, Deaths, var2=deaths, pop=children )
+      %By_race( Deaths_15to19, 15-19 years old, Deaths, var2=deaths, pop=persons )
+      %By_race( Deaths_20to24, 20-24 years old, Deaths, var2=deaths, pop=persons )
+      %By_race( Deaths_w_age, with age reported, Deaths, var2=deaths, pop=persons )
+    
+      %By_sex( Deaths_15to19, 15-19 years old )
+      %By_sex( Deaths_20to24, 20-24 years old )
+      Deaths_15to19_w_sex  = Deaths_15to19 * Deaths_w_sex;
+      Deaths_20to24_w_sex  = Deaths_20to24 * Deaths_w_sex;
+      label
+        Deaths_15to19_w_sex  = "Deaths to persons 15-19 years old with sex reported"
+        Deaths_20to24_w_sex  = "Deaths to persons 20-24 years old with sex reported";
 
 	%end;
 
+	%%if &calc_cause. = Y %then %do;
+    
+    ** By cause of death **;
+    
+    if not( missing( put( Icd10_3d, $Icd13v. ) ) ) then do;
+    
+      Deaths_heart = 0;
+      Deaths_cancer = 0;
+      Deaths_hiv = 0;
+      Deaths_diabetes = 0;
+      Deaths_hypert = 0;
+      Deaths_cereb = 0;
+      Deaths_liver = 0;
+      Deaths_respitry = 0;
+      Deaths_oth_caus = 0;
+      Deaths_w_cause = 0;
+        Deaths_homicide = 0;
+        Deaths_suicide = 0;
+        Deaths_accident = 0;
+        Deaths_violent = 0;
 
-%mend Read_births_new;
+        if put( icd10_3d, $icd10s. ) = "Intentional self-harm" then Deaths_suicide = 1;
+        else if put( icd10_3d, $icd10s. ) = "Assault" then Deaths_homicide = 1;
+        else if icd10_3d in: ( 'V', 'W', 'X' ) then Deaths_accident = 1;
+        else if icd10_3d in ( 'I01', 'I11', 'I13' ) or
+           put( icd10_3d, $icd10s. ) in: 
+             ( "Chronic rheumatic heart diseases",
+               "Ischaemic heart diseases",
+               "Pulmonary heart disease",
+               "Other forms of heart disease" )
+          then Deaths_heart = 1;
+        else if icd10_3d =: 'C' then Deaths_cancer = 1;
+        else if put( icd10_3d, $icd10s. ) = "Human immunodeficiency virus [HIV] disease" then Deaths_hiv = 1;
+        else if put( icd10_3d, $icd10s. ) = "Diabetes mellitus" then Deaths_diabetes = 1;
+        else if put( icd10_3d, $icd10s. ) = "Hypertensive diseases" then Deaths_hypert = 1;
+        else if put( icd10_3d, $icd10s. ) = "Cerebrovascular diseases" then Deaths_cereb = 1;
+        else if put( icd10_3d, $icd10s. ) = "Diseases of liver" then Deaths_liver = 1;
+        else if icd10_3d =: 'J' then Deaths_respitry = 1;
+        else Deaths_oth_caus = 1;
+      
+        Deaths_violent = sum( Deaths_suicide, Deaths_homicide, Deaths_accident );
+        
+        label
+          Deaths_homicide = 'Deaths from homicide'
+          Deaths_suicide = 'Deaths from suicide'
+          Deaths_accident = 'Accidental deaths'
+          Deaths_violent = 'Violent deaths (homicide/suicide/accidents)';
+      
+      Deaths_w_cause = 1;
+    
+    end;
+    else do;
+    
+      Deaths_w_cause = 0;
+    
+    end;
+    
+    label
+      Deaths_heart = 'Deaths from heart disease'
+      Deaths_cancer = 'Deaths from cancer'
+      Deaths_hiv = 'Deaths from HIV'
+      Deaths_diabetes = 'Deaths from diabetes'
+      Deaths_hypert = 'Deaths from hypertensive diseases'
+      Deaths_cereb = 'Deaths from cerebrovascular diseases'
+      Deaths_liver = 'Deaths from liver diseases'
+      Deaths_respitry = 'Deaths from respitory diseases'
+      Deaths_oth_caus = 'Deaths from other causes'
+      Deaths_w_cause = 'Deaths with cause reported';
+      
+      %By_sex( Deaths_heart, from heart disease )
+      %By_sex( Deaths_cancer, from cancer )
+      %By_sex( Deaths_hiv, from HIV )
+      %By_sex( Deaths_diabetes, from diabetes )
+      %By_sex( Deaths_hypert, from hypertensive diseases )
+      %By_sex( Deaths_cereb, from cerebrovascular diseases )
+      %By_sex( Deaths_liver, from liver diseases )
+      %By_sex( Deaths_respitry, from respitory diseases )
+      %By_sex( Deaths_oth_caus, from other causes )
+      %By_sex( Deaths_w_cause, with cause reported )
+    
+    ** Violent deaths **;
+
+     ** Violent crimes by race **;
+        %By_race( Deaths_violent, ,Violent deaths, var2=deaths, pop=persons )
+      
+     ** Violent crimes by sex **;
+        %By_sex( Deaths_violent, , type=Violent deaths )
+      
+      ** 15 to 19 years old **;
+      
+      Deaths_violent_15to19 = Deaths_violent * Deaths_15to19;
+      label Deaths_violent_15to19 = "Violent deaths to persons 15-19 years old";
+      
+      Deaths_homicide_15to19 = Deaths_homicide * Deaths_15to19;
+      label Deaths_homicide_15to19 = "Deaths from homicide to persons 15-19 years old";
+      
+      Deaths_suicide_15to19 = Deaths_suicide * Deaths_15to19;
+      label Deaths_suicide_15to19 = "Deaths from suicide to persons 15-19 years old";
+      
+      Deaths_accident_15to19 = Deaths_accident * Deaths_15to19;
+      label Deaths_accident_15to19 = "Accidental deaths to persons 15-19 years old";
+      
+      Deaths_w_cause_15to19 = Deaths_w_cause * Deaths_15to19;
+      label Deaths_w_cause_15to19 = "Deaths to persons 15-19 years old with cause reported";
+      
+      ** 20 to 24 years old **;
+      
+      Deaths_violent_20to24 = Deaths_violent * Deaths_20to24;
+      label Deaths_violent_20to24 = "Violent deaths to persons 20-24 years old";
+          
+      Deaths_homicide_20to24 = Deaths_homicide * Deaths_20to24;
+      label Deaths_homicide_20to24 = "Deaths from homicide to persons 20-24 years old";
+      
+      Deaths_suicide_20to24 = Deaths_suicide * Deaths_20to24;
+      label Deaths_suicide_20to24 = "Deaths from suicide to persons 20-24 years old";
+      
+      Deaths_accident_20to24 = Deaths_accident * Deaths_20to24;
+      label Deaths_accident_20to24 = "Accidental deaths to persons 20-24 years old";
+      
+      Deaths_w_cause_20to24 = Deaths_w_cause * Deaths_20to24;
+      label Deaths_w_cause_20to24 = "Deaths to persons 20-24 years old with cause reported";
+
+	  %end;
+
+%mend Read_deaths_new;
+
 
 /* End of macro definition */
