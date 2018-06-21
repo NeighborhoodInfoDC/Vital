@@ -29,6 +29,25 @@ data deaths;
 
 	** Convert some character variables to numeric **;
 	 Age_n = 1 * Age;
+	 
+	 If sex = "M" then sex_n = 1;
+	 	else if sex = "F" then sex_n = 2;
+
+	if race = "White" then race_n = 1;
+		else if race = "Black" then race_n = 2;
+		else if race = "Asian" then race_n = 3;
+		else if race = "Other" then race_n = 4;
+		else race_n = .;
+
+	bday_n = 1* bday;
+	bmonth_n = 1* bmonth;
+	byear_n = 1* byear;
+
+	dday_n = 1* dday;
+	dmonth_n = 1* dmonth;
+	dyear_n = 1* dyear;
+
+	Year = dyear;
 
 	** Code missings **;
 	if age_n = 99 then age_n = .u;
@@ -94,7 +113,6 @@ data deaths;
           when ( '5' ) Age_calc = age / ( 365.25 * 24 * 60 );
           otherwise do;
             Age_calc = .u;
-            %warn_put( msg='Invalid age unit of time: ' age_unit= age= Birth_dt= Death_dt= Age_calc= Icd10_3d= )
           end;
         end;
       end;
@@ -109,7 +127,7 @@ data deaths;
     end;
 
 
-	 
+	 drop sex bday bmonth byear dday dmonth dyear;
 
 run;
 
@@ -142,7 +160,7 @@ data deaths_geo_nomatch;
 	if m_addr = " " ;
 
 	/* Fix messed up tract codes */
-	if dyear = "2013" then do;
+	if year = "2013" then do;
 		if tract = "0038" then tract_fix = "003800";
 		if tract = "0097" then tract_fix = "009700";
 		if tract = "0104" then tract_fix = "010400";
@@ -150,7 +168,7 @@ data deaths_geo_nomatch;
 		if tract_fix ^= " " then fixed = 1;
 	end;
 
-	if dyear = "2012" then do;
+	if year = "2012" then do;
 		if tract = "0024" then tract_fix = "002400";
 		if tract = "0031" then tract_fix = "003100";
 		if tract = "0043" then tract_fix = "004300";
@@ -162,14 +180,14 @@ data deaths_geo_nomatch;
 		if tract_fix ^= " " then fixed = 1;
 	end;
 
-	if dyear = "2011" then do;
+	if year = "2011" then do;
 		if tract = "0040" then tract_fix = "004000";
 		if tract = "0090" then tract_fix = "009000";
 		if tract_fix ^= " " then fixed = 1;
 
 	end;
 
-	if dyear = "2009" then do;
+	if year = "2009" then do;
 		tract=compress(tract,,'s');
 		if tract = "." then tract_fix = " ";
 		if tract = "1" then tract_fix = "000100";
@@ -261,19 +279,9 @@ data deaths_ungeocodable deaths_std_match;
 		else output deaths_std_match;
 run;
 
-data births_geo_2008_ward_notract births_geo_other;
-
-  set births_geo_nomatch;
-  ward_ = ward +0;
-  
-  if missing( geo2010 ) and not( missing( ward ) ) and birthyr = '2008' 
-    then output births_geo_2008_ward_notract;
-  else output births_geo_other;
-  
-run;
 
 %Hot_deck2( 
-  by=dyear,
+  by=year,
   data=deaths_ungeocodable, 
   source=deaths_geo_match, 
   alloc=geo2010, 
@@ -285,8 +293,7 @@ run;
 
 data deaths_geo_ward_notract_hd;
 	set deaths_geo_ward_notract_hd;
-	drop Anc2002 Anc2012 Cluster_tr2000 Geo2000 GeoBg2010 GeoBlk2010 city
-						 Psa2004 Psa2012 SSL VoterPre2012 Ward2002 Ward2012 bridgepk stantoncommons cluster2017 ;
+	drop Anc2002 Anc2012 Cluster_tr2000 city Psa2004 Psa2012 VoterPre2012 Ward2002 Ward2012 bridgepk stantoncommons cluster2017 ;
 	city = "1";
 run;
 
@@ -301,52 +308,50 @@ run;
 ** Combine matched and non-matched files back together **;
 data deaths_geo_all;
 	set deaths_geo_match deaths_std_match deaths_geo_ward_notract_hd_std;
-run;
 
+	sex = sex_n;
+	bday = bday_n;
+	bmonth = bmonth_n;
+	byear = byear_n;
+	dday = dday_n;
+	dmonth = dmonth_n;
+	dyear = dyear_n;
 
-** Combine matched and non-matched files back together **;
-data births_geo_all;
-	set births_geo_match births_geo_std;
+	%read_deaths_new ();
 
-	mage = mage_n;
-	bweight = bweight_n;
-	gest_age = gest_age_n ;
-	num_visit = num_visit_n;
-	pre_care = pre_care_n;
-	plural = plural_n;
+	label age = "Age at death (see Age_unit for unit of time)"
+		  age_calc = "Age at death (UI calculated, years)"
+		  age_unit = "Unit of time for age at death"
+		  Death_dt = "Date of death"
+		  Birth_dt = "Date of birth" 
+		  Tract = "Census tract (DOH provided)"
+		  Latino = "Hispanic origin of deceased (UI recode)"
+		  Race = "Race of deceased"
+		  Sex = "Sex of deceased"
+		  year = "Year of death"
+		  bmonth = "Month of birth"
+		  bday = "Day of birth"
+		  byear = "Year of birth"
+		  dmonth = "Month of death"
+		  dday = "Day of death"
+		  dyear = "Year of death"
+	;
 
-	%Read_births_new ();
-
-	label mrace = "Mother's race"
-	      mage = "Mother's age at birth (years)"
-		  Bweight_lbs = "Child's birth weight (lbs)"
-		  bweight = "Child's birth weight (grams)"
-		  latino = "Mother's Hispanic/Latino origin"
-		  mstat = "Mother's marital status"
-		  num_visit = "Number of prenatal visits"
-		  year = "Year of birth"
-		  gest_age = "Gestational age of child (weeks)"
-		  mrace_num = "Mother's race UI re-code"
-		  ward = "Mother's ward of residence"
-		  concept_dt = "Date Conceived (UI estimated)"
-		  pre_care = "Weeks in to Pregnancy of first Prenatal Visit"
-		  plural = "Count of single/plural births"
-;
-
-	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n
-		 birthmo birthdy kbweight kmage plural_n
+	drop sex_n age_n race_n bday_n bmonth_n byear_n dday_n dmonth_n dyear_n
 		 address address_std address_id x y ssl latitude longitude 
+		 hotdeck_wt tract_fix fixed _label_ geo2010_alloc
 		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_;
-
+      
 run;
+
 
 
 %macro finalize_by_year;
 
-%do year = 2010 %to 2016;
+%do year = 2009 %to 2016;
 
-data births_&year.;
-	set Births_geo_all (where=(year = &year.));
+data deaths_&year.;
+	set deaths_geo_all (where=(year = "&year."));
 
 	** UI created  record number **;
 	RecordNo + 1;
@@ -355,17 +360,17 @@ data births_&year.;
 run;
 
 %Finalize_data_set( 
-  data=births_&year.,
-  out=births_&year.,
+  data=deaths_&year.,
+  out=deaths_&year.,
   outlib=vital,
-  label="Individual birth records, &year, DC",
+  label="Individual death records, &year, DC",
   sortby=RecordNo,
   /** Metadata parameters **/
   restrictions=None,
   revisions=%str(&revisions.),
   /** File info parameters **/
   printobs=5,
-  freqvars=birthyr ward2012 mrace mstatnew meducatn
+  freqvars=year race latino_dec Icd10_3d
   );
 
 
@@ -373,3 +378,6 @@ run;
 
 %mend finalize_by_year;
 %finalize_by_year;
+
+
+/* End of program */
