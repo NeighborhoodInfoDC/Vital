@@ -22,8 +22,8 @@
 
 /** Update with latest full year and quarter of sales data available **/
 data Deaths ;
-   set Vital.Deaths_1998 Vital.Deaths_1999 Vital.Deaths_2000 Vital.Deaths_2001 Vital.Deaths_2002 Vital.Deaths_2003
-       Vital.Deaths_2004 Vital.Deaths_2005 Vital.Deaths_2006 Vital.Deaths_2007 Vital.Deaths_2008 Vital.Deaths_2009
+   set /*Vital.Deaths_1998 Vital.Deaths_1999 Vital.Deaths_2000 Vital.Deaths_2001 Vital.Deaths_2002 Vital.Deaths_2003
+       Vital.Deaths_2004 Vital.Deaths_2005 Vital.Deaths_2006 Vital.Deaths_2007 Vital.Deaths_2008*/ Vital.Deaths_2009
 	   Vital.Deaths_2010 Vital.Deaths_2011 Vital.Deaths_2012 Vital.Deaths_2013 Vital.Deaths_2014 Vital.Deaths_2015
 	   Vital.Deaths_2016 
 	   ;
@@ -43,7 +43,7 @@ run;
 
 proc sql noprint;
 	select name
-	into :blist separated by " "
+	into :dlist separated by " "
 	from deaths_vars;
 quit;
 
