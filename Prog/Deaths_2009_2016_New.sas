@@ -47,7 +47,7 @@ data deaths;
 	dmonth_n = 1* dmonth;
 	dyear_n = 1* dyear;
 
-	Year = dyear;
+	Year = 1* dyear;
 
 	** Code missings **;
 	if age_n = 99 then age_n = .u;
@@ -127,7 +127,7 @@ data deaths;
     end;
 
 
-	 drop sex bday bmonth byear dday dmonth dyear;
+	 drop sex bday bmonth byear dday dmonth dyear age;
 
 run;
 
@@ -160,7 +160,7 @@ data deaths_geo_nomatch;
 	if m_addr = " " ;
 
 	/* Fix messed up tract codes */
-	if year = "2013" then do;
+	if year = 2013 then do;
 		if tract = "0038" then tract_fix = "003800";
 		if tract = "0097" then tract_fix = "009700";
 		if tract = "0104" then tract_fix = "010400";
@@ -168,7 +168,7 @@ data deaths_geo_nomatch;
 		if tract_fix ^= " " then fixed = 1;
 	end;
 
-	if year = "2012" then do;
+	if year = 2012 then do;
 		if tract = "0024" then tract_fix = "002400";
 		if tract = "0031" then tract_fix = "003100";
 		if tract = "0043" then tract_fix = "004300";
@@ -180,14 +180,14 @@ data deaths_geo_nomatch;
 		if tract_fix ^= " " then fixed = 1;
 	end;
 
-	if year = "2011" then do;
+	if year = 2011 then do;
 		if tract = "0040" then tract_fix = "004000";
 		if tract = "0090" then tract_fix = "009000";
 		if tract_fix ^= " " then fixed = 1;
 
 	end;
 
-	if year = "2009" then do;
+	if year = 2009 then do;
 		tract=compress(tract,,'s');
 		if tract = "." then tract_fix = " ";
 		if tract = "1" then tract_fix = "000100";
@@ -316,6 +316,7 @@ data deaths_geo_all;
 	dday = dday_n;
 	dmonth = dmonth_n;
 	dyear = dyear_n;
+	age = age_n;
 
 	%read_deaths_new ();
 
@@ -351,7 +352,7 @@ run;
 %do year = 2009 %to 2016;
 
 data deaths_&year.;
-	set deaths_geo_all (where=(year = "&year."));
+	set deaths_geo_all (where=(year = &year.));
 
 	** UI created  record number **;
 	RecordNo + 1;
