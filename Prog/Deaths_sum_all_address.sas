@@ -84,7 +84,7 @@ run;
 
 data Deaths&filesuf (compress=no);
 
-  set Deaths&filesuf (where=(&level ^= " " and year ^= " "));
+  set Deaths&filesuf (where=(&level ^= " " and year ^= .));
   
  array a_deaths{*} deaths_: ;
   
@@ -150,6 +150,7 @@ run;
 
 /** End Macro Definition **/
 
+%Summarize( level=geo2010 )
 %Summarize( level=city )
 %Summarize( level=anc2002 )
 %Summarize( level=anc2012 )
@@ -165,7 +166,6 @@ run;
 %Summarize( level=Cluster2017 )
 %Summarize( level=stantoncommons )
 
-run;
 
 
 
