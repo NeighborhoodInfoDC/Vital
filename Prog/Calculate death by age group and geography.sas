@@ -98,8 +98,8 @@ run;
 keep_nonmatch=n,
 dat_ds_name=work.population ,
 dat_org_geo=geo2010,
-dat_count_vars=agegroup_1: agegroup_11,
-wgt_ds_name=Wt_tr10_wd12,
+dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 ,
+wgt_ds_name=Wt_tr10_ward12,
 wgt_org_geo=Geo2010,
 wgt_new_geo=ward2012, 
 wgt_id_vars=,
@@ -111,7 +111,6 @@ calc_vars=
 calc_vars_labels=
 
 )
-
 
 proc summary data=population;
 class ward2012;
