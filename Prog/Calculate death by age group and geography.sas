@@ -81,17 +81,17 @@ keep geo2010 agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 a
 		agegroup_11= sum(pct13i25, pct13i49);
 
 ;
-	 label agegroup_1="under 1 year old"
-	       agegroup_2 "1 - 4 Years"
-           agegroup_3 "5 - 14 Years"
-           agegroup_4 "15 - 24 Years"
-           agegroup_5 "25 - 34 Years"
-	       agegroup_6 "35 - 44 Years"
-	       agegroup_7 "45 - 54 Years"
-           agegroup_8 "55 - 64 Years"
-          agegroup_9 "65 - 74 Years"
-          agegroup_10 "75 - 84 Years"
-          agegroup_11 "85 Years and Over";
+	 label agegroup_1="under 1 year old";
+	     label  agegroup_2= "1 - 4 Years";
+        label   agegroup_3= "5 - 14 Years";
+       label    agegroup_4= "15 - 24 Years";
+       label    agegroup_5= "25 - 34 Years";
+	  label     agegroup_6= "35 - 44 Years";
+	 label      agegroup_7= "45 - 54 Years";
+      label     agegroup_8= "55 - 64 Years";
+      label    agegroup_9= "65 - 74 Years";
+    label      agegroup_10 ="75 - 84 Years";
+     label     agegroup_11= "85 Years and Over";
 run;
 
 %Transform_geo_data(
