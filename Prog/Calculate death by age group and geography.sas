@@ -65,7 +65,7 @@ var deaths_total
 run;
 
 ** Repeat for census population data as denominator  **;
-data population;
+data population (where=(geo2010 ne ''));
 keep geo2010 agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 ;
 	set census.Census_sf1_2010_dc_ph;
         agegroup_1= sum (pct12i107,pct12i3);
@@ -93,6 +93,7 @@ keep geo2010 agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 a
     label      agegroup_10 ="75 - 84 Years";
      label     agegroup_11= "85 Years and Over";
 run;
+
 
 %Transform_geo_data(
 keep_nonmatch=n,
