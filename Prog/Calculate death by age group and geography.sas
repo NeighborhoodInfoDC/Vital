@@ -37,31 +37,19 @@ data deaths;
 run;
 
 proc summary data=deaths;
-class age_group ward2012;
+class age_group geo2010;
 var deaths_total 
 ;
-	output	out=death_age_ward2012	sum= ;
+	output	out=death_age_tract2010	sum= ;
+run;
+proc sort data= death_age_tract2010;
+by geo2010;
 run;
 
-proc summary data=deaths;
-class age_group race;
-var deaths_total 
-;
-	output	out=death_age_race	sum= ;
-run;
-
-proc summary data=deaths;
-class age_group cluster2017;
-var deaths_total 
-;
-	output	out=death_age_cluster2017	sum= ;
-run;
-
-proc summary data=deaths;
-class age_group city;
-var deaths_total 
-;
-	output	out=death_age_city	sum= ;
+proc transpose data=death_age_tract2010 out=death_age_tract2010;
+var age_group; 
+by geo2010;
+id age_group;
 run;
 
 ** Repeat for census population data as denominator  **;
@@ -94,10 +82,18 @@ keep geo2010 agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 a
      label     agegroup_11= "85 Years and Over";
 run;
 
+proc sort data= population;
+by geo2010;
+run;
+
+data death_pop;
+merge death_age_tract2010 population;
+by geo2010;
+run;
 
 %Transform_geo_data(
 keep_nonmatch=n,
-dat_ds_name=work.population ,
+dat_ds_name=work.death_pop,
 dat_org_geo=geo2010,
 dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 ,
 wgt_ds_name=Wt_tr10_ward12,
