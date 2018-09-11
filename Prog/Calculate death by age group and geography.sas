@@ -46,7 +46,7 @@ proc sort data= death_age_tract2010;
 by geo2010;
 run;
 
-proc transpose data=death_age_tract2010 out=death_age_tract2010;
+proc transpose data=death_age_tract2010 out=death_age_tract2010_new prefix=total_age_group_;
 var age_group; 
 by geo2010;
 id age_group;
@@ -87,7 +87,7 @@ by geo2010;
 run;
 
 data death_pop;
-merge death_age_tract2010 population;
+merge death_age_tract2010_new population;
 by geo2010;
 run;
 
