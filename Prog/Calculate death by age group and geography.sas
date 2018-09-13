@@ -19,7 +19,7 @@
 %DCData_lib( Census )
 ** create age groups based on public health research standards https://ibis.health.state.nm.us/resource/AARate.html  **;
 data deaths;
-	set vital.Deaths_2016;
+	set vital.Deaths_2016 vital.Deaths_2015 vital.Deaths_2014;
 
 	if age <=1 then age_group = 1;
 		else if 1< age <=4 then age_group = 2;
@@ -47,9 +47,9 @@ by geo2010;
 run;
 
 proc transpose data=death_age_tract2010 out=death_age_tract2010_new prefix = death_age_group_;
-var age_group; 
+var Deaths_total; 
 by geo2010;
-id age_group;
+id age_group; 
 run;
 
 ** Repeat for census population data as denominator  **;
@@ -95,13 +95,13 @@ run;
 keep_nonmatch=n,
 dat_ds_name=work.death_pop,
 dat_org_geo=geo2010,
-dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 death_age_group_1 death_age_group_2 death_age_group_3 death_age_group_4 death_age_group_5 death_age_group_6 death_age_group_7 death_age_group_8 death_age_group_9 death_age_group_10 death_age_group_11 ,
+dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 death_age_group_1 death_age_group_2 death_age_group_3 death_age_group_4 death_age_group_5 death_age_group_6 death_age_group_7 death_age_group_8 death_age_group_9 death_age_group_10 death_age_group_11,
 wgt_ds_name=general.Wt_tr10_ward12,
 wgt_org_geo=Geo2010,
 wgt_new_geo=ward2012, 
 wgt_id_vars=,
 wgt_wgt_var=PopWt,
-out_ds_name=pop_by_ward,
+out_ds_name=death_by_ward,
 out_ds_label=%str(Population by age group from tract 2010 to ward),
 calc_vars= 
 ,
@@ -113,15 +113,16 @@ calc_vars_labels=
 keep_nonmatch=n,
 dat_ds_name=work.death_pop,
 dat_org_geo=geo2010,
-dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 death_age_group_1 death_age_group_2 death_age_group_3 death_age_group_4 death_age_group_5 death_age_group_6 death_age_group_7 death_age_group_8 death_age_group_9 death_age_group_10 death_age_group_11 ,
+dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 death_age_group_1 death_age_group_2 death_age_group_3 death_age_group_4 death_age_group_5 death_age_group_6 death_age_group_7 death_age_group_8 death_age_group_9 death_age_group_10 death_age_group_11,
 wgt_ds_name=general.Wt_tr10_cl17,
 wgt_org_geo=Geo2010,
 wgt_new_geo=cluster2017, 
 wgt_id_vars=,
 wgt_wgt_var=PopWt,
-out_ds_name=pop_by_cluster,
+out_ds_name=death_by_cluster,
 out_ds_label=%str(Population by age group from tract 2010 to ward),
 calc_vars= 
+ 
 ,
 calc_vars_labels=
 
@@ -131,13 +132,13 @@ calc_vars_labels=
 keep_nonmatch=n,
 dat_ds_name=work.death_pop,
 dat_org_geo=geo2010,
-dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 death_age_group_1 death_age_group_2 death_age_group_3 death_age_group_4 death_age_group_5 death_age_group_6 death_age_group_7 death_age_group_8 death_age_group_9 death_age_group_10 death_age_group_11 ,
+dat_count_vars= agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 agegroup_7 agegroup_8 agegroup_9 agegroup_10 agegroup_11 death_age_group_1 death_age_group_2 death_age_group_3 death_age_group_4 death_age_group_5 death_age_group_6 death_age_group_7 death_age_group_8 death_age_group_9 death_age_group_10 death_age_group_11,
 wgt_ds_name=general.Wt_tr10_city,
 wgt_org_geo=Geo2010,
 wgt_new_geo=city, 
 wgt_id_vars=,
 wgt_wgt_var=PopWt,
-out_ds_name=pop_by_city,
+out_ds_name=death_by_city,
 out_ds_label=%str(Population by age group from tract 2010 to ward),
 calc_vars= 
 ,
@@ -146,47 +147,145 @@ calc_vars_labels=
 )
 
 data directweight_ward;
-set pop_by_ward;
+set death_by_ward;
 length indicator $80;
-keep indicator year  numerator denom equityvariable;
-indicator = "Weigted average mortality rate";
+keep indicator year Ward2012 numerator denom equityvariable;
+indicator = "Age adjusted mortality rate";
 year = "2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9, agegroup_10, agegroup_11);
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11);
+numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11)/3;
 equityvariable= numerator/denom;
 geo=Ward2012;
 run;
 
 data directweight_cluster17;
-set pop_by_cluster;
+set death_by_cluster;
 length indicator $80;
-keep indicator year  numerator denom equityvariable;
+keep indicator year cluster2017 numerator denom equityvariable;
 indicator = "Weigted average mortality rate";
 year = "2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9, agegroup_10, agegroup_11);
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11);
+numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11)/3;
 equityvariable= numerator/denom;
 geo=cluster2017;
+run;
+
+data directweight_cluster17;
+	set directweight_cluster17;
+format geo $clus17f. ;
 run;
 
 data directweight_city;
-set pop_by_city;
+set death_by_city;
 length indicator $80;
-keep indicator year  numerator denom equityvariable;
+keep indicator year City numerator denom equityvariable;
+indicator = "Weigted average mortality rate";
+year = "2016";
+denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9, agegroup_10, agegroup_11);
+numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11)/3;
+equityvariable= numerator/denom;
+geo=city;
+run;
+
+proc export data=directweight_cluster17
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_DCavemortality_cluster17_format.csv"
+	dbms=csv replace;
+run;
+
+proc export data=directweight_ward
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_DCavemortality_ward.csv"
+	dbms=csv replace;
+run;
+
+proc export data=directweight_city
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_DCavemortality_city.csv"
+	dbms=csv replace;
+run;
+
+/*use 2000 standard pop as weight*/
+
+data adjustedweight_ward;
+set death_by_ward;
+length indicator $80;
+keep indicator year Ward2012 numerator denom equityvariable;
+indicator = "Age adjusted mortality rate";
+year = "2016";
+denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9, agegroup_10, agegroup_11);
+numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11);
+equityvariable= (death_age_group_1/agegroup_1)/3*0.013818 
+               +(death_age_group_2/agegroup_2)/3*0.055317 
+               +(death_age_group_3/agegroup_3)/3*0.145565 
+               +(death_age_group_4/agegroup_4)/3*0.138646 
+               +(death_age_group_5/agegroup_5)/3*0.135573 
+               +(death_age_group_6/agegroup_6)/3*0.162613 
+               +(death_age_group_7/agegroup_7)/3*0.134834 
+               +(death_age_group_8/agegroup_8)/3*0.087247 
+               +(death_age_group_9/agegroup_9)/3*0.066037
+               +(death_age_group_10/agegroup_10)/3*0.044842
+               +(death_age_group_11/agegroup_11)/3*0.015508;
+geo=Ward2012;
+run;
+
+data adjustedweight_cluster17;
+set death_by_cluster;
+length indicator $80;
+keep indicator year cluster2017 numerator denom equityvariable;
 indicator = "Weigted average mortality rate";
 year = "2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9, agegroup_10, agegroup_11);
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11);
-equityvariable= numerator/denom;
+equityvariable= (death_age_group_1/agegroup_1)/3*0.013818 
+               +(death_age_group_2/agegroup_2)/3*0.055317 
+               +(death_age_group_3/agegroup_3)/3*0.145565 
+               +(death_age_group_4/agegroup_4)/3*0.138646 
+               +(death_age_group_5/agegroup_5)/3*0.135573 
+               +(death_age_group_6/agegroup_6)/3*0.162613 
+               +(death_age_group_7/agegroup_7)/3*0.134834 
+               +(death_age_group_8/agegroup_8)/3*0.087247 
+               +(death_age_group_9/agegroup_9)/3*0.066037
+               +(death_age_group_10/agegroup_10)/3*0.044842
+               +(death_age_group_11/agegroup_11)/3*0.015508;
 geo=cluster2017;
 run;
 
-data equity_tabs_&geosuf;
-retain indicator year &geo numerator denom equityvariable;
-set  unemployment postsecondary homeownership income75k abovepoverty childrenabovepoverty costburden commute earning75k violentcrime prenatal afford;
+data adjustedweight_cluster17;
+	set adjustedweight_cluster17;
+format geo $clus17f. ;
 run;
 
-proc export data=
-	outfile="&_dcdata_default_path\DMPED\Prog\neighborhood_sfcondo_afford.csv"
+data adjustedweight_city;
+set death_by_city;
+length indicator $80;
+keep indicator year City numerator denom equityvariable;
+indicator = "Weigted average mortality rate";
+year = "2016";
+denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9, agegroup_10, agegroup_11);
+numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11);
+equityvariable= (death_age_group_1/agegroup_1)/3*0.013818 
+               +(death_age_group_2/agegroup_2)/3*0.055317 
+               +(death_age_group_3/agegroup_3)/3*0.145565 
+               +(death_age_group_4/agegroup_4)/3*0.138646 
+               +(death_age_group_5/agegroup_5)/3*0.135573 
+               +(death_age_group_6/agegroup_6)/3*0.162613 
+               +(death_age_group_7/agegroup_7)/3*0.134834 
+               +(death_age_group_8/agegroup_8)/3*0.087247 
+               +(death_age_group_9/agegroup_9)/3*0.066037
+               +(death_age_group_10/agegroup_10)/3*0.044842
+               +(death_age_group_11/agegroup_11)/3*0.015508;
+geo=city;
+run;
+
+proc export data=adjustedweight_cluster17
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_2000adjustedmortality_cluster17_format.csv"
+	dbms=csv replace;
+run;
+
+proc export data=adjustedweight_ward
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_2000adjustedmortality_ward.csv"
+	dbms=csv replace;
+run;
+
+proc export data=adjustedweight_city
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_2000adjustedmortality_city.csv"
 	dbms=csv replace;
 run;
