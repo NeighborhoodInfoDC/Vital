@@ -44,7 +44,7 @@ var deaths_total ;
 	output	out=death_age_tract2010	sum= ;
 run;
 proc sort data= death_age_tract2010;
-by geo2010;
+by  geo2010 ;
 run;
 
 proc transpose data=death_age_tract2010 out=death_age_tract2010_new prefix = death_age_group_;
@@ -173,7 +173,20 @@ indicator = "Age adjusted mortality rate";
 year = "2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9);
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9, death_age_group_10, death_age_group_11)/3;
-equityvariable= (death_age_group_1/agegroup_1)/3*0.014
+
+equityvariable = sum( 
+			   (death_age_group_1/agegroup_1/3*0.014),
+               (death_age_group_2/agegroup_2/3*0.05),
+               (death_age_group_3/agegroup_3/3*0.099),
+               (death_age_group_4/agegroup_4/3*0.11),
+               (death_age_group_5/agegroup_5/3*0.24),
+               (death_age_group_6/agegroup_6/3*0.15),
+               (death_age_group_7/agegroup_7/3*0.14),
+               (death_age_group_8/agegroup_8/3*0.12),
+               (death_age_group_9/agegroup_9/3*0.071)
+);
+
+*equityvariable= (death_age_group_1/agegroup_1)/3*0.014
                +(death_age_group_2/agegroup_2)/3*0.05
                +(death_age_group_3/agegroup_3)/3*0.099
                +(death_age_group_4/agegroup_4)/3*0.11
@@ -183,7 +196,6 @@ equityvariable= (death_age_group_1/agegroup_1)/3*0.014
                +(death_age_group_8/agegroup_8)/3*0.12
                +(death_age_group_9/agegroup_9)/3*0.071
 ;
-geo=Ward2012;
 run;
 
 data DCweight_cluster17;
@@ -203,7 +215,6 @@ equityvariable= (death_age_group_1/agegroup_1)/3*0.014
                +(death_age_group_7/agegroup_7)/3*0.14
                +(death_age_group_8/agegroup_8)/3*0.12
                +(death_age_group_9/agegroup_9)/3*0.071;
-geo=cluster2017;
 run;
 
 data DCweight_cluster17;
@@ -228,7 +239,6 @@ equityvariable= (death_age_group_1/agegroup_1)/3*0.014
                +(death_age_group_7/agegroup_7)/3*0.14
                +(death_age_group_8/agegroup_8)/3*0.12
                +(death_age_group_9/agegroup_9)/3*0.071;
-geo=city;
 run;
 
 proc export data=DCweight_cluster17
