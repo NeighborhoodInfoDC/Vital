@@ -36,10 +36,11 @@ data deaths;
 
 run;
 
+proc sort data = deaths; by age_group geo2010; run;
+
 proc summary data=deaths;
-class age_group geo2010;
-var deaths_total 
-;
+by age_group geo2010;
+var deaths_total ;
 	output	out=death_age_tract2010	sum= ;
 run;
 proc sort data= death_age_tract2010;
@@ -60,7 +61,7 @@ keep geo2010 agegroup_1 agegroup_2 agegroup_3 agegroup_4 agegroup_5 agegroup_6 a
 		agegroup_2= sum(pct12i108,pct12i109,pct12i110, pct12i111,pct12i4,pct12i5, pct12i6,pct12i7 );
 		agegroup_3= sum(pct13i28, pct13i29,pct13i4,pct13i5  );
 		agegroup_4= sum(pct13i30, pct13i31,pct13i32, pct13i33, pct13i6, pct13i7, pct13i8, pct13i9, pct13i10);
-		agegroup_5= sum(pct13i11,pct13i12);
+		agegroup_5= sum(pct13i11,pct13i12, pct13i35, pct13i36);
 		agegroup_6= sum(pct13i13, pct13i14);
 		agegroup_7= sum(pct13i15, pct13i16);
 		agegroup_8 = sum(pct13i17, pct13i18, pct13i19);
@@ -120,7 +121,7 @@ wgt_new_geo=cluster2017,
 wgt_id_vars=,
 wgt_wgt_var=PopWt,
 out_ds_name=death_by_cluster,
-out_ds_label=%str(Population by age group from tract 2010 to ward),
+out_ds_label=%str(Population by age group from tract 2010 to cluster),
 calc_vars= 
  
 ,
@@ -139,7 +140,7 @@ wgt_new_geo=city,
 wgt_id_vars=,
 wgt_wgt_var=PopWt,
 out_ds_name=death_by_city,
-out_ds_label=%str(Population by age group from tract 2010 to ward),
+out_ds_label=%str(Population by age group from tract 2010 to city),
 calc_vars= 
 ,
 calc_vars_labels=
