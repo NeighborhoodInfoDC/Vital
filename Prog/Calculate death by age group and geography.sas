@@ -184,7 +184,7 @@ equityvariable = sum(
                (death_age_group_7/agegroup_7/3*0.14),
                (death_age_group_8/agegroup_8/3*0.12),
                (death_age_group_9/agegroup_9/3*0.071) 
-				) *1000 ;
+				) *100000 ;
 
 ;
 run;
@@ -207,7 +207,7 @@ equityvariable= sum(
                (death_age_group_7/agegroup_7/3*0.14),
                (death_age_group_8/agegroup_8/3*0.12),
               (death_age_group_9/agegroup_9/3*0.071)
-				) *1000 ;
+				) *100000 ;
 run;
 
 data DCweight_cluster17;
@@ -233,7 +233,7 @@ equityvariable = sum(
                (death_age_group_7/agegroup_7/3*0.14),
                (death_age_group_8/agegroup_8/3*0.12),
                (death_age_group_9/agegroup_9/3*0.071)
-				*1000 );
+				*100000 );
 
 run;
 
