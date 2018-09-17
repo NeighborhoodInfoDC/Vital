@@ -21,17 +21,17 @@
 data deaths;
 	set vital.Deaths_2016 vital.Deaths_2015 vital.Deaths_2014;
 
-	if age_calc <=1 then age_group = 1;
-		else if 1< age_calc  <=4 then age_group = 2;
-		else if 5< age_calc  <=14 then age_group = 3;
-		else if 15< age_calc  <=24 then age_group = 4;
-		else if 25< age_calc  <=34 then age_group = 5;
-		else if 35< age_calc  <=44 then age_group = 6;
-		else if 45< age_calc  <=54 then age_group = 7;
-		else if 55< age_calc  <=64 then age_group = 8;
-        else if 65< age_calc  <=74 then age_group = 9;
-        else if 75< age_calc  <=84 then age_group = 10;
-        else if age_calc  > 85 then age_group = 11;
+	if age_calc < 1 then age_group = 1;
+		else if 1 <= age_calc  <5 then age_group = 2;
+		else if 5 <= age_calc  <15 then age_group = 3;
+		else if 15 <= age_calc  <25 then age_group = 4;
+		else if 25 <= age_calc  <35 then age_group = 5;
+		else if 35 <= age_calc  <45 then age_group = 6;
+		else if 45 <= age_calc  <55 then age_group = 7;
+		else if 55 <= age_calc  <65 then age_group = 8;
+        else if 65 <= age_calc  <75 then age_group = 9;
+        else if 75 <= age_calc  < 85 then age_group = 10;
+        else if age_calc  >= 85 then age_group = 11;
 		else age_group = .;
 
 run;
@@ -169,72 +169,75 @@ data DCweight_ward;
 set death_by_ward;
 length indicator $80;
 keep indicator year Ward2012 numerator denom equityvariable;
-indicator = "Age adjusted premature mortality rate";
+indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
 
 equityvariable = sum ( 
-			   (death_age_group_1/agegroup_1/3*0.012556963*100000),
-               (death_age_group_2/agegroup_2/3*0.044670573*100000),
-               (death_age_group_3/agegroup_3/3*0.089821946*100000),
-               (death_age_group_4/agegroup_4/3*0.182544487*100000),
-               (death_age_group_5/agegroup_5/3*0.218895808*100000),
-               (death_age_group_6/agegroup_6/3*0.14153607*100000),
-               (death_age_group_7/agegroup_7/3*0.132839548*100000),
-               (death_age_group_8/agegroup_8/3*0.112263394*100000),
-               (death_age_group_9/agegroup_9/3*0.06487121*100000)
+			   (death_age_group_1/agegroup_1/3*0.012556963*1000),
+               (death_age_group_2/agegroup_2/3*0.044670573*1000),
+               (death_age_group_3/agegroup_3/3*0.089821946*1000),
+               (death_age_group_4/agegroup_4/3*0.182544487*1000),
+               (death_age_group_5/agegroup_5/3*0.218895808*1000),
+               (death_age_group_6/agegroup_6/3*0.14153607*1000),
+               (death_age_group_7/agegroup_7/3*0.132839548*1000),
+               (death_age_group_8/agegroup_8/3*0.112263394*1000),
+               (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 );
 
 
 run;
 
-data DCweight_cluster17;
+data DCweight_cluster17a;
 set death_by_cluster;
 length indicator $80;
 keep indicator year cluster2017 numerator denom equityvariable;
-indicator = "Weigted average mortality rate";
-year = "2016";
+indicator = "Age-adjusted premature mortality rate";
+year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
 equityvariable= sum(
-               (death_age_group_1/agegroup_1/3*0.012556963*100000),
-               (death_age_group_2/agegroup_2/3*0.044670573*100000),
-               (death_age_group_3/agegroup_3/3*0.089821946*100000),
-               (death_age_group_4/agegroup_4/3*0.182544487*100000),
-               (death_age_group_5/agegroup_5/3*0.218895808*100000),
-               (death_age_group_6/agegroup_6/3*0.14153607*100000),
-               (death_age_group_7/agegroup_7/3*0.132839548*100000),
-               (death_age_group_8/agegroup_8/3*0.112263394*100000),
-               (death_age_group_9/agegroup_9/3*0.06487121*100000)
+               (death_age_group_1/agegroup_1/3*0.012556963*1000),
+               (death_age_group_2/agegroup_2/3*0.044670573*1000),
+               (death_age_group_3/agegroup_3/3*0.089821946*1000),
+               (death_age_group_4/agegroup_4/3*0.182544487*1000),
+               (death_age_group_5/agegroup_5/3*0.218895808*1000),
+               (death_age_group_6/agegroup_6/3*0.14153607*1000),
+               (death_age_group_7/agegroup_7/3*0.132839548*1000),
+               (death_age_group_8/agegroup_8/3*0.112263394*1000),
+               (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 				)  ;
+
+if numerator <=5 then do; numerator=.; equityvariable=.; end;
 run;
 
 data DCweight_cluster17;
-	set DCweight_cluster17;
+	set DCweight_cluster17a;
 format geo $clus17f. ;
+geo=cluster2017;
 run;
 
 data DCweight_city;
 set death_by_city;
 length indicator $80;
 keep indicator year City numerator denom equityvariable;
-indicator = "Weigted average mortality rate";
-year = "2016";
+indicator = "Age-adjusted premature mortality rate";
+year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
 equityvariable = sum( 
-			   (death_age_group_1/agegroup_1/3*0.012556963*100000),
-               (death_age_group_2/agegroup_2/3*0.044670573*100000),
-               (death_age_group_3/agegroup_3/3*0.089821946*100000),
-               (death_age_group_4/agegroup_4/3*0.182544487*100000),
-               (death_age_group_5/agegroup_5/3*0.218895808*100000),
-               (death_age_group_6/agegroup_6/3*0.14153607*100000),
-               (death_age_group_7/agegroup_7/3*0.132839548*100000),
-               (death_age_group_8/agegroup_8/3*0.112263394*100000),
-               (death_age_group_9/agegroup_9/3*0.06487121*100000)
+			   (death_age_group_1/agegroup_1/3*0.012556963*1000),
+               (death_age_group_2/agegroup_2/3*0.044670573*1000),
+               (death_age_group_3/agegroup_3/3*0.089821946*1000),
+               (death_age_group_4/agegroup_4/3*0.182544487*1000),
+               (death_age_group_5/agegroup_5/3*0.218895808*1000),
+               (death_age_group_6/agegroup_6/3*0.14153607*1000),
+               (death_age_group_7/agegroup_7/3*0.132839548*1000),
+               (death_age_group_8/agegroup_8/3*0.112263394*1000),
+               (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 				);
 
