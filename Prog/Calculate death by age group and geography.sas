@@ -150,17 +150,17 @@ calc_vars_labels=
 
 /*DC population weights 2010 census excluding 75+ aged population (511806)
 
-under 1 year old: 7156 [0.014]
-1-4: 25457 [0.05]
-5-14: 50863 [0.099]
-15-24: 57236 [0.11]
-25-34: 121519 [0.24]
-35-44: 78614 [0.15]
-45-54: 72783 [0.14]
-55-64: 62088 [0.12]
-65-74: 36090 [0.071]
-75-84: 20461 
-85+: 9134 
+under 1 year old: 7156 [0.012556963]
+1-4: 25457 [0.044670573]
+5-14: 51188 [0.089821946]
+15-24: 104029 [0.182544487]
+25-34: 124745 [0.218895808]
+35-44: 80659 [0.14153607]
+45-54: 75703 [0.132839548]
+55-64: 63977 [0.112263394]
+65-74: 36969 [0.06487121]
+75-84: 21525 
+85+: 10315 
 
 */
 
@@ -169,21 +169,21 @@ data DCweight_ward;
 set death_by_ward;
 length indicator $80;
 keep indicator year Ward2012 numerator denom equityvariable;
-indicator = "Age adjusted mortality rate";
-year = "2016";
+indicator = "Age adjusted premature mortality rate";
+year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
 
 equityvariable = sum ( 
-			   (death_age_group_1/agegroup_1/3*0.014*100000),
-               (death_age_group_2/agegroup_2/3*0.05*100000),
-               (death_age_group_3/agegroup_3/3*0.099*100000),
-               (death_age_group_4/agegroup_4/3*0.11*100000),
-               (death_age_group_5/agegroup_5/3*0.24*100000),
-               (death_age_group_6/agegroup_6/3*0.15*100000),
-               (death_age_group_7/agegroup_7/3*0.14*100000),
-               (death_age_group_8/agegroup_8/3*0.12*100000),
-               (death_age_group_9/agegroup_9/3*0.071*100000)
+			   (death_age_group_1/agegroup_1/3*0.012556963*100000),
+               (death_age_group_2/agegroup_2/3*0.044670573*100000),
+               (death_age_group_3/agegroup_3/3*0.089821946*100000),
+               (death_age_group_4/agegroup_4/3*0.182544487*100000),
+               (death_age_group_5/agegroup_5/3*0.218895808*100000),
+               (death_age_group_6/agegroup_6/3*0.14153607*100000),
+               (death_age_group_7/agegroup_7/3*0.132839548*100000),
+               (death_age_group_8/agegroup_8/3*0.112263394*100000),
+               (death_age_group_9/agegroup_9/3*0.06487121*100000)
 				
 );
 
@@ -199,15 +199,16 @@ year = "2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
 equityvariable= sum(
-                (death_age_group_1/agegroup_1/3*0.014*100000),
-                (death_age_group_2/agegroup_2/3*0.05*100000),
-               (death_age_group_3/agegroup_3/3*0.099*100000),
-               (death_age_group_4/agegroup_4/3*0.11*100000),
-               (death_age_group_5/agegroup_5/3*0.24*100000),
-               (death_age_group_6/agegroup_6/3*0.15*100000),
-               (death_age_group_7/agegroup_7/3*0.14*100000),
-               (death_age_group_8/agegroup_8/3*0.12*100000),
-              (death_age_group_9/agegroup_9/3*0.071*100000)
+               (death_age_group_1/agegroup_1/3*0.012556963*100000),
+               (death_age_group_2/agegroup_2/3*0.044670573*100000),
+               (death_age_group_3/agegroup_3/3*0.089821946*100000),
+               (death_age_group_4/agegroup_4/3*0.182544487*100000),
+               (death_age_group_5/agegroup_5/3*0.218895808*100000),
+               (death_age_group_6/agegroup_6/3*0.14153607*100000),
+               (death_age_group_7/agegroup_7/3*0.132839548*100000),
+               (death_age_group_8/agegroup_8/3*0.112263394*100000),
+               (death_age_group_9/agegroup_9/3*0.06487121*100000)
+				
 				)  ;
 run;
 
@@ -225,15 +226,16 @@ year = "2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
 numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
 equityvariable = sum( 
-			   (death_age_group_1/agegroup_1/3*0.014*100000),
-               (death_age_group_2/agegroup_2/3*0.05*100000),
-               (death_age_group_3/agegroup_3/3*0.099*100000),
-               (death_age_group_4/agegroup_4/3*0.11*100000),
-               (death_age_group_5/agegroup_5/3*0.24*100000),
-               (death_age_group_6/agegroup_6/3*0.15*100000),
-               (death_age_group_7/agegroup_7/3*0.14*100000),
-               (death_age_group_8/agegroup_8/3*0.12*100000),
-               (death_age_group_9/agegroup_9/3*0.071*100000)
+			   (death_age_group_1/agegroup_1/3*0.012556963*100000),
+               (death_age_group_2/agegroup_2/3*0.044670573*100000),
+               (death_age_group_3/agegroup_3/3*0.089821946*100000),
+               (death_age_group_4/agegroup_4/3*0.182544487*100000),
+               (death_age_group_5/agegroup_5/3*0.218895808*100000),
+               (death_age_group_6/agegroup_6/3*0.14153607*100000),
+               (death_age_group_7/agegroup_7/3*0.132839548*100000),
+               (death_age_group_8/agegroup_8/3*0.112263394*100000),
+               (death_age_group_9/agegroup_9/3*0.06487121*100000)
+				
 				);
 
 run;
