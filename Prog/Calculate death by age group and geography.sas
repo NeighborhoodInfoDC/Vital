@@ -171,9 +171,7 @@ length indicator $80;
 keep indicator year Ward2012 numerator denom equityvariable;
 indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
-denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
-
+denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9);
 equityvariable = sum ( 
 			   (death_age_group_1/agegroup_1/3*0.012556963*1000),
                (death_age_group_2/agegroup_2/3*0.044670573*1000),
@@ -187,7 +185,7 @@ equityvariable = sum (
 				
 );
 
-
+numerator= equityvariable * denom /1000;
 run;
 
 data DCweight_cluster17a;
@@ -196,8 +194,7 @@ length indicator $80;
 keep indicator year cluster2017 numerator denom equityvariable;
 indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
-denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
+denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9);
 equityvariable= sum(
                (death_age_group_1/agegroup_1/3*0.012556963*1000),
                (death_age_group_2/agegroup_2/3*0.044670573*1000),
@@ -210,12 +207,28 @@ equityvariable= sum(
                (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 				)  ;
-
+numerator= equityvariable * denom /1000;
 if numerator <=5 then do; numerator=.; equityvariable=.; end;
 run;
 
+data DCweight_cluster17a_suppress;
+set DCweight_cluster17a;
+if cluster2017 in( "42" "45" "46") then do;
+           delete;
+		end;
+
+		if denom <10 then do;
+			denom=.;
+			numerator=.; 
+			equityvariable=.; 
+		end;
+
+		if cluster2017=" " then delete;
+		
+run;
+
 data DCweight_cluster17;
-	set DCweight_cluster17a;
+set DCweight_cluster17a_suppress;
 format geo $clus17f. ;
 geo=cluster2017;
 run;
@@ -226,8 +239,8 @@ length indicator $80;
 keep indicator year City numerator denom equityvariable;
 indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
-denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
+denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9);
+
 equityvariable = sum( 
 			   (death_age_group_1/agegroup_1/3*0.012556963*1000),
                (death_age_group_2/agegroup_2/3*0.044670573*1000),
@@ -240,11 +253,12 @@ equityvariable = sum(
                (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 				);
+numerator= equityvariable * denom /1000;
 
 run;
 
 proc export data=DCweight_cluster17
-	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_DCavemortality_cluster17_format.csv"
+	outfile="&_dcdata_default_path\Equity\Prog\JPMC feature\Equityfeature_DCavemortality_cluster17_format_suppress10.csv"
 	dbms=csv replace;
 run;
 
