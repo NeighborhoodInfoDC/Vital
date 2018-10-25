@@ -185,7 +185,7 @@ equityvariable = sum (
 				
 );
 
-numerator= equityvariable * denom *1000;
+numerator= equityvariable * denom /1000;
 run;
 
 data DCweight_cluster17a;
@@ -207,7 +207,7 @@ equityvariable= sum(
                (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 				)  ;
-numerator= equityvariable * denom *1000;
+numerator= equityvariable * denom /1000;
 if numerator <=5 then do; numerator=.; equityvariable=.; end;
 run;
 
@@ -253,7 +253,7 @@ equityvariable = sum(
                (death_age_group_9/agegroup_9/3*0.06487121*1000)
 				
 				);
-numerator= equityvariable * denom *1000;
+numerator= equityvariable * denom /1000;
 
 run;
 
