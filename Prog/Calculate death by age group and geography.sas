@@ -172,8 +172,7 @@ keep indicator year Ward2012 numerator denom equityvariable;
 indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
-
+numerator= equityvariable * denom *1000;
 equityvariable = sum ( 
 			   (death_age_group_1/agegroup_1/3*0.012556963*1000),
                (death_age_group_2/agegroup_2/3*0.044670573*1000),
@@ -197,7 +196,7 @@ keep indicator year cluster2017 numerator denom equityvariable;
 indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
+numerator= equityvariable * denom *1000;
 equityvariable= sum(
                (death_age_group_1/agegroup_1/3*0.012556963*1000),
                (death_age_group_2/agegroup_2/3*0.044670573*1000),
@@ -227,7 +226,7 @@ keep indicator year City numerator denom equityvariable;
 indicator = "Age-adjusted premature mortality rate";
 year = "2014-2016";
 denom= sum(agegroup_1, agegroup_2, agegroup_3, agegroup_4, agegroup_5, agegroup_6, agegroup_7, agegroup_8, agegroup_9)*3;
-numerator= sum(death_age_group_1, death_age_group_2, death_age_group_3, death_age_group_4, death_age_group_5, death_age_group_6, death_age_group_7, death_age_group_8, death_age_group_9);
+numerator= equityvariable * denom *1000;
 equityvariable = sum( 
 			   (death_age_group_1/agegroup_1/3*0.012556963*1000),
                (death_age_group_2/agegroup_2/3*0.044670573*1000),
