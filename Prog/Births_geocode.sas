@@ -6,8 +6,20 @@
  Created:  4/18/2018
  Version:  SAS 9.4
  Environment:  Windows
+ 
+ This program exports non-geocoded addresses to CSV files for fuzzy 
+ matching in STATA with the MAR address master file, so they can be 
+ added to the MAR and geocoded. 
+ 
+ It is not clear whether the fuzzy matched addresses were incorporated 
+ into the final geocoding of the Vital records. 
+ 
+ Also, a known SAS error (http://support.sas.com/kb/59/941.html) 
+ is causing the first Proc Geocode to terminate abnormally with the 
+ error message "ERROR: Too many WHERE clause resets." 
+ 
  Modifications: 
-
+  
 **************************************************************************/
 
 %include "L:\SAS\Inc\StdLocal.sas"; 
