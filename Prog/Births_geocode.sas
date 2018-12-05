@@ -6,8 +6,20 @@
  Created:  4/18/2018
  Version:  SAS 9.4
  Environment:  Windows
+ 
+ This program exports non-geocoded addresses to CSV files for fuzzy 
+ matching in STATA with the MAR address master file, so they can be 
+ added to the MAR and geocoded. 
+ 
+ It is not clear whether the fuzzy matched addresses were incorporated 
+ into the final geocoding of the Vital records. 
+ 
+ Also, a known SAS error (http://support.sas.com/kb/59/941.html) 
+ is causing the first Proc Geocode to terminate abnormally with the 
+ error message "ERROR: Too many WHERE clause resets." 
+ 
  Modifications: 
-
+  
 **************************************************************************/
 
 %include "L:\SAS\Inc\StdLocal.sas"; 
@@ -79,12 +91,86 @@ run;
 
 
 /* Import ArcMap shapefile with parcel polygons */
-/*can't find physical path?
-proc mapimport out=Occ.Newboundary_map
-  datafile="D:\DCData\Libraries\Vital\Maps\CURRENT\School_Attendance_Zones_Elementary";
-run;
-*/
 
+proc mapimport out=Oldboudnary_map
+  datafile="D:\DCData\Libraries\Vital\Maps\OLD\School_Attendance_Zones_Elementary__Old.shp";  
+run;
+
+proc sort data=Oldboudnary_map; by OBJECTID_1;
+run;
+
+goptions reset=global border;
+
+proc ginside includeborder
+  data=b9geo
+  map=Oldboudnary_map
+  out=Oldboudnary_map_join;
+  id OBJECTID_1;
+run;
+
+proc freq data = Oldboudnary_map_join;
+	tables OBJECTID_1;
+run;
+
+
+goptions reset=global border;
+
+proc ginside includeborder
+  data=b0308geo
+  map=Oldboudnary_map
+  out=Oldboudnary_map_join;
+  id OBJECTID_1;
+run;
+
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2003'));
+	tables OBJECTID_1 ;
+run;
+
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2004'));
+	tables OBJECTID_1 ;
+run;
+
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2005'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2006'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2007'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2008'));
+	tables OBJECTID_1 ;
+run;
+goptions reset=global border;
+
+proc ginside includeborder
+  data=b1016geo
+  map=Oldboudnary_map
+  out=Oldboudnary_map_join;
+  id OBJECTID_1;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2010'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2011'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2012'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2013'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2014'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2015'));
+	tables OBJECTID_1 ;
+run;
+proc freq data = Oldboudnary_map_join (where=(BIRTHYR='2016'));
+	tables OBJECTID_1 ;
+run;
 /*export the geocoded file to excel for Arcgis
 
 proc export data=b9geo (where=(_STATUS_=''))
