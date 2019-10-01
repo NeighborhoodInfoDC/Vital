@@ -84,7 +84,7 @@ proc sort data=Mar.Address_points_2017_08 out=Mar_streetnames nodupkey;
 run;
 
 proc export data=Mar_streetnames
-   outfile='L:\Libraries\Vital\Raw\2018\geocoded\mar street names.csv'
+   outfile="&_dcdata_r_path\Vital\Raw\2018\geocoded\mar street names.csv"
    dbms=csv
    replace;
 run;
@@ -93,7 +93,7 @@ run;
 /* Import ArcMap shapefile with parcel polygons */
 
 proc mapimport out=Oldboudnary_map
-  datafile="D:\DCData\Libraries\Vital\Maps\OLD\School_Attendance_Zones_Elementary__Old.shp";  
+  datafile="&_dcdata_r_path\Vital\Maps\OLD\School_Attendance_Zones_Elementary__Old.shp";  
 run;
 
 proc sort data=Oldboudnary_map; by OBJECTID_1;
