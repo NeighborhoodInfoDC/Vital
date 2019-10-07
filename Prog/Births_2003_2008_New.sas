@@ -253,7 +253,7 @@ run;
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match (drop=hotdeck_wt) births_geo_std;
+	set births_geo_match (drop=hotdeck_wt) births_geo_std (where=(geo2010^=""));
 	
 	if missing( geo2010_alloc ) then geo2010_alloc = 0;
 
