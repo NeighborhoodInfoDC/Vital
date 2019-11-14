@@ -89,6 +89,7 @@ run;
   debug=n,
   listunmatched=N,
   streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
+  zip=zipcode,
   data = births,
   staddr = address,
   out = births_geo

@@ -285,7 +285,7 @@ data births_geo_all;
 		 birthmo birthdy kbweight kmage plural_n
 		 address address_std address_id x y ssl latitude longitude 
 		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_
-		 tract Dctract Tract_full Tract_yr ward_ _label_;
+		 tract Dctract Tract_full Tract_yr ward_ _label_ XID;
 
 
 run;
