@@ -216,8 +216,12 @@ run;
 data births_geo_match;
 	set births_geo;
 	if M_ADDR ^= " " ;
-  retain hotdeck_wt 1;
-  city = "1";
+    retain hotdeck_wt 1;
+    city = "1";
+
+  	zip = put(m_zip,z5.);
+	format zip $zipa.;
+	label zip = "ZIP code (5-digit)";
 run;
 
 
