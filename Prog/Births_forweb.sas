@@ -22,8 +22,8 @@
 %let library = vital; /* Library of the summary data to be transposed */
 %let outfolder = births; /* Name of folder where output CSV will be saved */
 %let sumdata = births_sum; /* Summary dataset name (without geo suffix) */
-%let start = 1998; /* Start year */
-%let end = 2011; /* End year */
+%let start = 2003; /* Start year */
+%let end = 2016; /* End year */
 %let keepvars = Births_w_weight Births_low_wt Births_w_age Births_teen; /* Summary variables to keep and transpose */
 
 
@@ -62,19 +62,6 @@ run;
 proc contents data = &sumdata._&geo._long_allyr out = &sumdata._&geo._metadata noprint;
 run;
 
-/* Output the metadata */
-ods csv file ="&_dcdata_default_path.\web\output\&outfolder.\&outfolder._&geo._metadata..csv";
-	proc print data =&sumdata._&geo._metadata noobs;
-	run;
-ods csv close;
-
-
-/* Output the CSV */
-ods csv file ="&_dcdata_default_path.\web\output\&outfolder.\&outfolder._&geo..csv";
-	proc print data =&sumdata._&geo._long_allyr noobs;
-	run;
-ods csv close
-
 
 %mend csv_create;
 %csv_create (tr10);
@@ -85,4 +72,5 @@ ods csv close
 %csv_create (city);
 %csv_create (psa12);
 %csv_create (zip);
+%csv_create (cl17);
 
