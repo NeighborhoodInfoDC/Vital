@@ -100,6 +100,18 @@ run;
   out = births_geo
 );
 
+** Subset records that matched **;
+data births_geo_match;
+	set births_geo;
+	if M_ADDR ^= " " ;
+	city = "1";
+	retain hotdeck_wt 1;
+
+	zip = put(m_zip,z5.);
+	format zip $zipa.;
+	label zip = "ZIP code (5-digit)";
+run;
+
 
 ** Subset  records that didn't match, use provided tract ID to create geo2010 **;
 data births_geo_nomatch;
@@ -123,23 +135,27 @@ run;
 
 ** Subset ungeocodable records**;
 data births_ungeocodable;
-	set births_geo (keep = address fedtractno m_addr);
+	set births_geo ;
 	if fedtractno in ("000000","999999"," ") and m_addr = " " ;
 run;
 
+%Hot_deck2( 
+  by=birthyr,
+  data=births_ungeocodable, 
+  source=births_geo_match, 
+  alloc=geo2010, 
+  weight=hotdeck_wt, 
+  out=births_hd,
+  print=n
+)  
 
-** Subset records that matched **;
-data births_geo_match;
-	set births_geo;
-	if M_ADDR ^= " " ;
 
-	city = "1";
-run;
+
 
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match births_geo_std;
+	set births_geo_match births_geo_std births_hd;
 
 	mage = mage_n;
 	bweight = bweight_n;
@@ -169,7 +185,8 @@ data births_geo_all;
 	drop mage_n bweight_n gest_age_n num_visit_n pre_care_n
 		 birthmo birthdy kbweight kmage plural_n
 		 address address_std address_id x y ssl latitude longitude 
-		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_;
+		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_ 
+		 hotdeck_wt _label_;
 
 run;
 

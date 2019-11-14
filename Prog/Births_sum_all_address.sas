@@ -165,6 +165,7 @@ run;
 %Summarize( level=bridgepk )
 %Summarize( level=Cluster2017 )
 %Summarize( level=stantoncommons )
+%Summarize( level=zip )
 
 run;
 

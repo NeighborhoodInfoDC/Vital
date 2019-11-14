@@ -89,6 +89,7 @@ run;
   debug=n,
   listunmatched=N,
   streetalt_file = &_dcdata_default_path\Vital\Prog\StreetAlt_041918_new.txt,
+  zip=zipcode,
   data = births,
   staddr = address,
   out = births_geo
@@ -129,6 +130,10 @@ data births_geo_match;
 	if M_ADDR ^= " " ;
 
 	city = "1";
+	zip = put(m_zip,z5.);
+	format zip $zipa.;
+	label zip = "ZIP code (5-digit)";
+	
 run;
 
 

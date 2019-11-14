@@ -24,8 +24,11 @@ libname vitalraw "&_dcdata_r_path\Vital\Raw\2018";
 
 
 ** Read raw data and clean some of the variables **;
-data births;
+data births_in;
 	set vitalraw.B0308final;
+
+	** Temporary ID  number **;
+	XID + 1;
 
 	** Convert some character variables to numeric **;
 	mage_n = 1 * mage;
@@ -91,14 +94,49 @@ data births;
 	length fedtractno_ $ 3;
 	fedtractno_ = fedtractno;
 	
-	if ward not in ( '1', '2', '3', '4', '5', '6', '7', '8' ) then ward = '';
+	if ward not in ( "1", "2", "3", "4", "5", "6", "7", "8" ) then ward = "";
     
   
   	format date mmddyy10. fedtractno_ $3.;
 
 	drop mage bweight gest_age num_visit pre_care plural;
 
+	%macro makevars ();
+	%do j=1 %to 99;
+	%let idvar = %scan(&idlist. , &j., ' ');
+	%let cleanvar = %scan(&cleanlist. , &j., ' ');
+
+	if xid = &idvar. then address = "&cleanvar.";
+
+	%end;
+	%mend makevars;
+
+
 run;
+
+/* Import cleaned addresses list */
+proc import 
+	datafile="&_dcdata_r_path\Vital\Raw\2018\addressfix2003-2008.csv" dbms=dlm out=addressfix;
+    delimiter=',';
+    getnames=yes;
+run;
+
+/* Merge on cleaned addresses */
+proc sql;
+	CREATE TABLE births_m AS
+	SELECT *
+	FROM births_in FULL JOIN addressfix
+	on births_in.XID=addressfix.XID;
+quit;
+
+/* Correct bad addresses */
+data births;
+	set births_m;
+	if CleanAddress ^= " " then do;
+		address = CleanAddress;
+	end;
+run;
+
 
 proc format;
   value $blank
@@ -178,8 +216,12 @@ run;
 data births_geo_match;
 	set births_geo;
 	if M_ADDR ^= " " ;
-  retain hotdeck_wt 1;
-  city = "1";
+    retain hotdeck_wt 1;
+    city = "1";
+
+  	zip = put(m_zip,z5.);
+	format zip $zipa.;
+	label zip = "ZIP code (5-digit)";
 run;
 
 
@@ -192,6 +234,7 @@ run;
   out=births_geo_2008_ward_notract_hd,
   print=n
 )  
+
 
 data births_geo_nomatch_hotdeck;
 
@@ -214,7 +257,7 @@ run;
 
 ** Combine matched and non-matched files back together **;
 data births_geo_all;
-	set births_geo_match (drop=hotdeck_wt) births_geo_std;
+	set births_geo_match (drop=hotdeck_wt) births_geo_std (where=(geo2010^=""));
 	
 	if missing( geo2010_alloc ) then geo2010_alloc = 0;
 
@@ -246,7 +289,7 @@ data births_geo_all;
 		 birthmo birthdy kbweight kmage plural_n
 		 address address_std address_id x y ssl latitude longitude 
 		 m_addr m_state m_city m_zip m_obs _matched_ _status_ _notes_ _score_
-		 tract Dctract Tract_full Tract_yr ward_ _label_;
+		 tract Dctract Tract_full Tract_yr ward_ _label_ XID;
 
 
 run;
