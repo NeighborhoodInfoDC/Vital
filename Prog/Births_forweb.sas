@@ -31,8 +31,8 @@
 
 %macro web_varcreate;
 
-Pct_births_low_wt = Births_low_wt / Births_w_weight;
-Pct_births_teen = Births_teen / Births_w_age;
+Pct_births_low_wt = Births_low_wt / Births_w_weight *100;
+Pct_births_teen = Births_teen / Births_w_age *100;
 
 label Pct_births_low_wt = "% low weight births (under 5.5 lbs)";
 label Pct_births_teen = "% births to teen mothers";
